@@ -1,6 +1,6 @@
 //
 //  LabelTableViewCell.swift
-//  guests2
+//  pretixios
 //
 //  Created by Marc Delling on 18.09.17.
 //  Copyright © 2017 Silpion IT-Solutions GmbH. All rights reserved.
@@ -26,16 +26,13 @@ class LabelTableViewCell: UITableViewCell {
     fileprivate func setup() {
         self.selectionStyle = UITableViewCellSelectionStyle.default
         self.accessoryType = .disclosureIndicator
-        //contentView.backgroundColor = UIColor.cyan
         
         label.font = UIFont(name: "HelveticaNeue", size: 17.0)
-        //label.backgroundColor = UIColor.yellow
         label.textColor = UIColor.darkText
         label.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(label)
         
-        valueLabel.font = UIFont(name: "HelveticaNeue", size: 17.0) // [UIFont systemFontOfSize:self.textLabel.font.pointSize]
-        //textField.backgroundColor = UIColor.red
+        valueLabel.font = UIFont(name: "HelveticaNeue", size: 17.0)
         valueLabel.textColor = UIColor.lightGray
         valueLabel.adjustsFontSizeToFitWidth = true
         valueLabel.textAlignment = .right

@@ -36,7 +36,7 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.tableView.register(GuestTableViewCell.self, forCellReuseIdentifier: "cell")
+        self.tableView.register(AttendeeTableViewCell.self, forCellReuseIdentifier: "cell")
         self.tableView.rowHeight = 44.0
         
         refreshControl = UIRefreshControl()
@@ -174,7 +174,7 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
     
     // MARK: - Table View Delegates
     
-    func configure(_ cell: GuestTableViewCell, at indexPath: IndexPath) {
+    func configure(_ cell: AttendeeTableViewCell, at indexPath: IndexPath) {
         let order = self.fetchedResultsController.object(at: indexPath)
         
         cell.nameLabel.text = order.attendee_name
@@ -231,7 +231,7 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! GuestTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AttendeeTableViewCell
         configure(cell, at: indexPath)
         return cell
     }
@@ -317,7 +317,7 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
                 tableView.deleteRows(at: [indexPath], with: .fade)
             }
         case .update:
-            if let indexPath = indexPath, let cell = tableView.cellForRow(at: indexPath) as? GuestTableViewCell {
+            if let indexPath = indexPath, let cell = tableView.cellForRow(at: indexPath) as? AttendeeTableViewCell {
                 configure(cell, at: indexPath)
             }
         case .move:

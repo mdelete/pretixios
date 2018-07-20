@@ -1,6 +1,6 @@
 //
 //  GuestTableViewCell.swift
-//  guests2
+//  pretixios
 //
 //  Created by Marc Delling on 17.09.17.
 //  Copyright © 2017 Silpion IT-Solutions GmbH. All rights reserved.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GuestTableViewCell : UITableViewCell {
+class AttendeeTableViewCell : UITableViewCell {
     
     let nameLabel = UILabel()
     let stateLabel = UILabel()
@@ -28,27 +28,23 @@ class GuestTableViewCell : UITableViewCell {
     fileprivate func setup() {
         
         self.selectionStyle = UITableViewCellSelectionStyle.default
-        //contentView.backgroundColor = UIColor.cyan
         
         sourceView.backgroundColor = UIColor.clear
         sourceView.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(sourceView)
         
         nameLabel.font = UIFont(name: "HelveticaNeue", size: 17.0)
-        //nameLabel.backgroundColor = UIColor.yellow
         nameLabel.textColor = UIColor.darkText
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(nameLabel)
         
         stateLabel.font = UIFont(name: "HelveticaNeue", size: 11.0)
-        //stateLabel.backgroundColor = UIColor.red
         stateLabel.textColor = UIColor.lightBlue
         stateLabel.textAlignment = .right
         stateLabel.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(stateLabel)
         
         auxiliaryLabel.font = UIFont(name: "HelveticaNeue", size: 11.0)
-        //auxiliaryLabel.backgroundColor = UIColor.blue
         auxiliaryLabel.textColor = UIColor.lightGray
         auxiliaryLabel.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(auxiliaryLabel)

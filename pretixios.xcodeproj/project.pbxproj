@@ -34,7 +34,7 @@
 		94D3E6492098B30500FB2894 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3E6452098B30500FB2894 /* NetworkManager.swift */; };
 		94D3E64A2098B30500FB2894 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3E6462098B30500FB2894 /* SyncManager.swift */; };
 		94D3E64D2098B6FE00FB2894 /* PretixModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 94D3E64B2098B6FE00FB2894 /* PretixModel.xcdatamodeld */; };
-		94D3E6502098B86400FB2894 /* GuestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3E64E2098B86400FB2894 /* GuestTableViewCell.swift */; };
+		94D3E6502098B86400FB2894 /* AttendeeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3E64E2098B86400FB2894 /* AttendeeTableViewCell.swift */; };
 		94D3E6512098B86400FB2894 /* LabelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3E64F2098B86400FB2894 /* LabelTableViewCell.swift */; };
 		94D3E65F2098BA9A00FB2894 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3E65E2098BA9900FB2894 /* SettingsViewController.swift */; };
 		94D3E6612098BD1300FB2894 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3E6602098BD1300FB2894 /* Extensions.swift */; };
@@ -75,7 +75,7 @@
 		94D3E6452098B30500FB2894 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		94D3E6462098B30500FB2894 /* SyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		94D3E64C2098B6FE00FB2894 /* PretixModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PretixModel.xcdatamodel; sourceTree = "<group>"; };
-		94D3E64E2098B86400FB2894 /* GuestTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuestTableViewCell.swift; sourceTree = "<group>"; };
+		94D3E64E2098B86400FB2894 /* AttendeeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttendeeTableViewCell.swift; sourceTree = "<group>"; };
 		94D3E64F2098B86400FB2894 /* LabelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelTableViewCell.swift; sourceTree = "<group>"; };
 		94D3E65E2098BA9900FB2894 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		94D3E6602098BD1300FB2894 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -184,7 +184,7 @@
 		94D3E62F2098B0E700FB2894 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				94D3E64E2098B86400FB2894 /* GuestTableViewCell.swift */,
+				94D3E64E2098B86400FB2894 /* AttendeeTableViewCell.swift */,
 				94D3E64F2098B86400FB2894 /* LabelTableViewCell.swift */,
 				94D3E63E2098B2EF00FB2894 /* ButtonTableViewCell.swift */,
 				94D3E63D2098B2EF00FB2894 /* TextFieldTableViewCell.swift */,
@@ -277,7 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				940A83912101B05F00EA3873 /* CheckinListTableViewController.swift in Sources */,
-				94D3E6502098B86400FB2894 /* GuestTableViewCell.swift in Sources */,
+				94D3E6502098B86400FB2894 /* AttendeeTableViewCell.swift in Sources */,
 				94D3E6362098B2DA00FB2894 /* QrScanViewController.swift in Sources */,
 				94D3E64A2098B30500FB2894 /* SyncManager.swift in Sources */,
 				94D3E6472098B30500FB2894 /* TabBarController.swift in Sources */,

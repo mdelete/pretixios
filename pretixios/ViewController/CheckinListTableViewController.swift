@@ -180,7 +180,7 @@ class CheckinListTableViewController: UITableViewController, NSFetchedResultsCon
                 tableView.deleteRows(at: [indexPath], with: .fade)
             }
         case .update:
-            if let indexPath = indexPath, let cell = tableView.cellForRow(at: indexPath) as? GuestTableViewCell {
+            if let indexPath = indexPath, let cell = tableView.cellForRow(at: indexPath) as? AttendeeTableViewCell {
                 configure(cell, at: indexPath)
             }
         case .move:

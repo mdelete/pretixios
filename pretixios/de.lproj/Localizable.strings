@@ -1,0 +1,47 @@
+/* 
+  Localized.strings
+  pretixios
+
+  Created by Marc Delling on 02.05.18.
+  Copyright © 2018 Silpion IT-Solutions GmbH. All rights reserved.
+*/
+
+"List" = "Liste";
+"Scan" = "Scannen";
+"Settings" = "Einstellung";
+"Order" = "Order";
+"Checkin" = "Eincheckzeit";
+"Name / Company / Email" = "Name / Firma / Email";
+"\(total) total, \(checkins) checkins" = "\(total) gesamt, \(checkins) eingecheckt";
+"You are about to delete all pretix data on this device" = "Bestätigen, um alle Event-Daten vom Gerät zu löschen";
+"Pending" = "Offen";
+"Created" = "Erzeugt";
+"Invitation" = "Einladungscode";
+"Save" = "Speichern";
+"Unknown" = "Unbekannt";
+"Refunded" = "Erstattet";
+"Canceled" = "Storniert";
+"Personal Data" = "Persönliche Daten";
+"Additional Info" = "Zusatzinformationen";
+"Status" = "Status";
+"Type" = "Typ";
+"\(guest.item) - Standard" = "\(guest.item) - Standard";
+"Expired" = "Abgelaufen";
+"Paid" = "Bezahlt";
+"Pending" = "Offen";
+"Company" = "Firma";
+"Name" = "Name";
+"Email" = "Email";
+"Position" = "Position";
+"Please scan a ticket" = "Scannen Sie ein Ticket ein";
+"Print Badge" = "Badgedruck";
+"Invalid Ticket" = "Ungültiges Ticket";
+"Valid Ticket" = "Gültiges Ticket";
+"Already redeemed" = "Bereits eingelöst";
+"No camera access" = "Kein Zugriff auf Kamera";
+"Camera access has been denied in settings." = "Zugriff auf die Kamera ist in den Einstellungen gesperrt.";
+"Please allow camera access in the privacy settings." = "Diese Funktion ist nur Verfügbar wenn sie der App Zugriff auf ihre Kamera gestatten.";
+"This feature is only available with camera access." = "Bitte erlauben sie der App den Zugriff auf die Kamera in den Datenschutzeinstellungen.";
+"Special Ticket!" = "Spezielles Ticket!";
+"Redeem" = "Einchecken";
+"None" = "Keiner";

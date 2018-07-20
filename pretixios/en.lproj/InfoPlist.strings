@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  pretixios
+
+  Created by Marc Delling on 04.05.18.
+  Copyright © 2018 Silpion IT-Solutions GmbH. All rights reserved.
+*/
+
+"This App uses NFC to scan ticket tags" = "This App uses NFC to scan ticket tags";
+"This App uses the camera to scan ticket codes" = "This App uses the camera to scan ticket codes";

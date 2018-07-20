@@ -1,0 +1,47 @@
+/* 
+  Localized.strings
+  pretixios
+
+  Created by Marc Delling on 02.05.18.
+  Copyright © 2018 Silpion IT-Solutions GmbH. All rights reserved.
+*/
+
+"List" = "List";
+"Scan" = "Scan";
+"Settings" = "Settings";
+"Order" = "Order";
+"Checkin" = "Checkin";
+"Name / Company / Email" = "Name / Company / Email";
+"\(total) total, \(checkins) checkins" = "\(total) total, \(checkins) checkins";
+"You are about to delete all pretix data on this device" = "You are about to delete all pretix data on this device";
+"Pending" = "Pending";
+"Created" = "Created";
+"Invitation" = "Invitation";
+"Save" = "Save";
+"Unknown" = "Unknown";
+"Refunded" = "Refunded";
+"Canceled" = "Canceled";
+"Personal Data" = "Personal Data";
+"Additional Info" = "Additional Info";
+"Status" = "Status";
+"Type" = "Type";
+"\(guest.item) - Standard" = "\(guest.item) - Standard";
+"Expired" = "Expired";
+"Paid" = "Paid";
+"Pending" = "Pending";
+"Company" = "Company";
+"Name" = "Name";
+"Email" = "Email";
+"Position" = "Position";
+"Please scan a ticket" = "Please scan a ticket";
+"Print Badge" = "Print Badge";
+"Invalid Ticket" = "Invalid Ticket";
+"Valid Ticket" = "Valid Ticket";
+"Already redeemed" = "Already redeemed";
+"No camera access" = "No camera access";
+"Camera access has been denied in settings." = "Camera access has been denied in settings.";
+"Please allow camera access in the privacy settings." = "Please allow camera access in the privacy settings.";
+"This feature is only available with camera access." = "This feature is only available with camera access.";
+"Special Ticket!" = "Special Ticket!";
+"Redeem" = "Redeem";
+"None" = "None";

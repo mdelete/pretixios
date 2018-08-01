@@ -17,6 +17,10 @@ extension String {
         dateFormatter.locale = NSLocale.current
         dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSSZ" // 2014-01-22T17:10:11.574
         
+        // CONSIDER: since iOS11 ISO8601DateFormatter can do fractional seconds
+        //let dateFormatter = ISO8601DateFormatter()
+        //formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
         return dateFormatter.date(from: self)
     }
     
@@ -66,6 +70,12 @@ extension Date {
         dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
         dateFormatter.dateFormat = "EEE',' dd MMM yyyy HH':'mm':'ss z"
         
+        return dateFormatter.string(from: self)
+    }
+    
+    func iso8601String() -> String {
+        let dateFormatter = ISO8601DateFormatter()
+        //formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds] // since iOS11 ISO8601DateFormatter can do fractional seconds
         return dateFormatter.string(from: self)
     }
     

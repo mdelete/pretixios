@@ -25,10 +25,13 @@ class NetworkManager : NSObject, URLSessionDelegate {
             let dateString = try container.decode(String.self)
             var optionalDate : Date?
  
+            // CONSIDER: since iOS11 ISO8601DateFormatter can do fractional seconds
+            //let dateFormatter = ISO8601DateFormatter()
+            //formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
             switch(dateString.count) {
             case 27:
                 let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSSZ" // 2018-03-15T21:10:08.346852Z
+                formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSSZ" // matches 2018-03-15T21:10:08.346852Z
                 optionalDate = formatter.date(from: dateString)
             default:
                 let formatter = ISO8601DateFormatter()
@@ -175,7 +178,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
         let dataTask = session.dataTask(with: request, completionHandler: { (data, response, neterror) -> Void in
             if neterror == nil {
                 let status = (response as! HTTPURLResponse).statusCode
-                if (status == 200 || status == 201 || status == 400), let data = data {
+                if (status == 200 || status == 201 || status == 400), let data = data { // FIXME: document why 400 might be ok
                     do {
                         let response = try self.decoder.decode(PretixRedeemResponse.self, from: data)
                         completion(response, nil)
@@ -196,22 +199,24 @@ class NetworkManager : NSObject, URLSessionDelegate {
     
     func getPretixCheckinlist() {
         if let base = UserDefaults.standard.string(forKey: "pretix_api_base") {
-            NetworkManager.sharedInstance.getPretixCheckinlist(path: base + "/checkinlists/", progress: 0)
+            NetworkManager.sharedInstance.getPretixCheckinlist(path: base + "/checkinlists/", progress: 0, status: 0)
         } else {
             SyncManager.sharedInstance.failure("getPretixCheckinlist", code: -1)
         }
     }
     
-    func getPretixCheckinlist(path: String?, progress: Int) {
+    func getPretixCheckinlist(path: String?, progress: Int, status: Int) {
         
         let syncManager = SyncManager.sharedInstance
         let syncPath = "getPretixCheckinlist"
         
         guard let path = path, let url = URL(string: path) else {
-            if progress > 0 {
-                SyncManager.sharedInstance.success(syncPath, code: 200)
+            if status == 200 {
+                syncManager.success(syncPath, code: status)
+                syncManager.checkDefaultCheckinList()
                 print("last chunk success")
-                SyncManager.sharedInstance.checkDefaultCheckinList()
+            } else {
+                syncManager.failure(syncPath, code: status)
             }
             return
         }
@@ -228,11 +233,6 @@ class NetworkManager : NSObject, URLSessionDelegate {
         
         var request = URLRequest(url: url)
         request.setValue("Token " + token, forHTTPHeaderField: "Authorization")
-        
-        if let modified = SyncManager.sharedInstance.lastSync(syncPath) {
-            print("Last sync \(modified.rfc1123String())")
-            request.setValue(modified.rfc1123String(), forHTTPHeaderField: "If-Modified-Since")
-        }
         
         let dataTask = session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
             if error == nil {
@@ -263,13 +263,13 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                     print("HORROR! \(results.count)")
                                 }
                             } catch {
-                                print("Fetch error: \(error) description: \(error.localizedDescription)")
+                                print("Fetch error: \(error.localizedDescription)")
                             }
                             
                         }
                         
                         syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
-                        self.getPretixCheckinlist(path: response.next, progress: response.results.count)
+                        self.getPretixCheckinlist(path: response.next, progress: response.results.count, status: status)
                         
                     } catch let error {
                         print(error)
@@ -279,10 +279,8 @@ class NetworkManager : NSObject, URLSessionDelegate {
                     print("\(error!.localizedDescription)")
                     syncManager.failure(syncPath, code: status)
                 } else if status == 304 {
-                    print("Not modified")
                     syncManager.success(syncPath, code: status)
                 } else {
-                    print("Error: \(status) \(#file):\(#line)")
                     syncManager.failure(syncPath, code: status)
                 }
             } else {
@@ -295,21 +293,23 @@ class NetworkManager : NSObject, URLSessionDelegate {
     
     func getPretixVouchers() {
         if let base = UserDefaults.standard.string(forKey: "pretix_api_base") {
-            NetworkManager.sharedInstance.getPretixVouchers(path: base + "/vouchers/", progress: 0)
+            NetworkManager.sharedInstance.getPretixVouchers(path: base + "/vouchers/", progress: 0, status: 0)
         } else {
             SyncManager.sharedInstance.failure("getPretixVoucher", code: -1)
         }
     }
     
-    func getPretixVouchers(path: String?, progress: Int) {
+    func getPretixVouchers(path: String?, progress: Int, status: Int) {
         
         let syncManager = SyncManager.sharedInstance
         let syncPath = "getPretixVoucher"
         
         guard let path = path, let url = URL(string: path) else {
-            if progress > 0 {
-                SyncManager.sharedInstance.success(syncPath, code: 200)
+            if status == 200 {
+                syncManager.success(syncPath, code: status)
                 print("last chunk success")
+            } else {
+                syncManager.failure(syncPath, code: status)
             }
             return
         }
@@ -326,11 +326,6 @@ class NetworkManager : NSObject, URLSessionDelegate {
         
         var request = URLRequest(url: url)
         request.setValue("Token " + token, forHTTPHeaderField: "Authorization")
-        
-        if let modified = SyncManager.sharedInstance.lastSync(syncPath) {
-            print("Last sync \(modified.rfc1123String())")
-            request.setValue(modified.rfc1123String(), forHTTPHeaderField: "If-Modified-Since")
-        }
         
         let dataTask = session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
             if error == nil {
@@ -362,7 +357,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
                         }
                         
                         syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
-                        self.getPretixVouchers(path: response.next, progress: response.results.count)
+                        self.getPretixVouchers(path: response.next, progress: response.results.count, status: status)
                         
                     } catch let error {
                         print(error)
@@ -372,10 +367,8 @@ class NetworkManager : NSObject, URLSessionDelegate {
                     print("\(error!.localizedDescription)")
                     syncManager.failure(syncPath, code: status)
                 } else if status == 304 {
-                    print("Not modified")
                     syncManager.success(syncPath, code: status)
                 } else {
-                    print("Error: \(status) \(#file):\(#line)")
                     syncManager.failure(syncPath, code: status)
                 }
             } else {
@@ -388,23 +381,23 @@ class NetworkManager : NSObject, URLSessionDelegate {
     
     func getPretixOrders() {
         if let base = UserDefaults.standard.string(forKey: "pretix_api_base") {
-            NetworkManager.sharedInstance.getPretixOrders(path: base + "/orders/", progress: 0)
+            NetworkManager.sharedInstance.getPretixOrders(path: base + "/orders/", progress: 0, status: 0)
         } else {
             SyncManager.sharedInstance.failure("getPretixOrders", code: -1)
         }
     }
     
-    func getPretixOrders(path: String?, progress: Int) {
+    func getPretixOrders(path: String?, progress: Int, status: Int) {
         
         let syncManager = SyncManager.sharedInstance
         let syncPath = "getPretixOrders"
         
-        guard let path = path, let url = URL(string: path) else {
-            if progress > 0 {
-                syncManager.success(syncPath, code: 200)
+        guard let path = path, var url = URL(string: path) else {
+            if status == 200 {
+                syncManager.success(syncPath, code: status)
                 print("last chunk success")
             } else {
-                syncManager.failure(syncPath, code: -1)
+                syncManager.failure(syncPath, code: status)
             }
             return
         }
@@ -420,13 +413,17 @@ class NetworkManager : NSObject, URLSessionDelegate {
             return
         }
         
-        var request = URLRequest(url: url)
-        request.setValue("Token " + token, forHTTPHeaderField: "Authorization")
-        
         if let modified = SyncManager.sharedInstance.lastSync(syncPath) {
             print("Last sync \(modified.rfc1123String())")
-            request.setValue(modified.rfc1123String(), forHTTPHeaderField: "If-Modified-Since")
+            if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+                urlComponents.queryItems = [URLQueryItem(name: "modified_since", value: modified.iso8601String())]
+                url = urlComponents.url!
+                print(url)
+            }
         }
+        
+        var request = URLRequest(url: url)
+        request.setValue("Token " + token, forHTTPHeaderField: "Authorization")
         
         let dataTask = session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
             if error == nil {
@@ -480,26 +477,23 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                         print("HORROR! \(results.count)")
                                     }
                                 } catch {
-                                    print("Fetch error: \(error) description: \(error.localizedDescription)")
+                                    print("Fetch error: \(error.localizedDescription)")
                                 }
                             }
                         }
                         
                         syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
-                        self.getPretixOrders(path: response.next, progress: response.results.count)
+                        self.getPretixOrders(path: response.next, progress: response.results.count, status: status)
                         
                     } catch let error {
                         print(error)
                         syncManager.failure(syncPath, code: -2)
                     }
                 } else if status == 401 {
-                    print("\(error!.localizedDescription)")
                     syncManager.failure(syncPath, code: status)
                 } else if status == 304 {
-                    print("Not modified")
                     syncManager.success(syncPath, code: status)
                 } else {
-                    print("Error: \(status) \(#file):\(#line)")
                     syncManager.failure(syncPath, code: status)
                 }
             } else {

@@ -8,6 +8,7 @@ Project status
 --------------
 
 ***USE AT YOUR OWN RISK***
+
 This project is work-in-progess. It uses the new *Pretix* API not the deprecated *Prextidroid* API for connecting with the pretix portal. 
 
 Features that work:
@@ -15,11 +16,7 @@ Features that work:
 * Connecting the app to a pretix installation for a specific checkin list of an event
 * Scanning and validating tickets simultaneously on multiple devices
 * Manually browsing for an attendee, viewing details and manual check in
-* Limited support for usage without an internet connection
-
-Caveats:
-
-* You need an internet connection to validate and check people in
+* Support for usage without an internet connection
 
 Configuration
 -------------
@@ -34,8 +31,8 @@ Next features
 -------------
 
 * A lot of cleanup and fixes
-* Full offline support
-* Badge printing using AirPrint
+* Clean offline support
+* Badge printing using AirPrint and BLE
 
 Design features
 ---------------

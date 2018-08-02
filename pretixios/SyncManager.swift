@@ -94,10 +94,13 @@ class SyncManager: NSObject {
         let fetchRequest: NSFetchRequest<Order> = Order.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "synced == -1")
         do {
-            let results = try self.backgroundContext.fetch(fetchRequest)
-            for result in results {
-                print("need to resync \(result.guid)")
+            let orders = try self.backgroundContext.fetch(fetchRequest)
+            for order in orders {
+                print("need to resync \(order.guid)")
                 // FIXME: try to silently redeem orders that failed to sync
+                NetworkManager.sharedInstance.postPretixRedeem(order: order) { (_, _) in
+                    /* this is a quick hack */
+                }
             }
         } catch {
             print("Fetch description: \(error.localizedDescription)")

@@ -185,6 +185,8 @@ class NetworkManager : NSObject, URLSessionDelegate {
                     } catch let jsonerror {
                         completion(nil, jsonerror)
                     }
+                    order.synced = 1
+                    SyncManager.sharedInstance.save()
                 } else {
                     print("Error: \(status) \(#file):\(#line) Url: \(request.url!)")
                     completion(nil, HttpError(code: status))
@@ -345,7 +347,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                 } else if (results.count == 0) {
                                     let voucher = Voucher(context: context)
                                     voucher.id = Int32(result.id)
-                                    // FIXME
+                                    // FIXME: implement
                                     print("Remote new \(result.id)")
                                 } else {
                                     print("HORROR! \(results.count)")

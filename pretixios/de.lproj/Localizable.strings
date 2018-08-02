@@ -12,7 +12,7 @@
 "Order" = "Order";
 "Checkin" = "Eincheckzeit";
 "Name / Company / Email" = "Name / Firma / Email";
-"\(total) total, \(checkins) checkins" = "\(total) gesamt, \(checkins) eingecheckt";
+"%d total, %d checkins" = "%d gesamt, %d eingecheckt";
 "You are about to delete all pretix data on this device" = "Bestätigen, um alle Event-Daten vom Gerät zu löschen";
 "Pending" = "Offen";
 "Created" = "Erzeugt";
@@ -25,7 +25,7 @@
 "Additional Info" = "Zusatzinformationen";
 "Status" = "Status";
 "Type" = "Typ";
-"\(guest.item) - Standard" = "\(guest.item) - Standard";
+"%d - Standard" = "%d - Standard";
 "Expired" = "Abgelaufen";
 "Paid" = "Bezahlt";
 "Pending" = "Offen";
@@ -46,3 +46,7 @@
 "Redeem" = "Einchecken";
 "None" = "Keiner";
 "Reset Configuration" = "Konfiguration zurücksetzen";
+"%d Checkin not synced. Pull to retry." = "%d Checkin nicht synchronisiert. Ziehen zum wiederholen.";
+"%d Checkins not synced. Pull to retry." = "%d Checkins nicht synchronisiert. Ziehen zum wiederholen.";
+"This list is empty. Maybe you need to configure the app first using the scanner or pull down to refresh." = "This list is empty. Maybe you need to configure the app first using the scanner or pull down to refresh.";
+"Attendees\n" = "Teilnehmer\n";

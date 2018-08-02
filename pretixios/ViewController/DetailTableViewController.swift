@@ -114,7 +114,7 @@ class DetailTableViewController: UITableViewController, ButtonCellDelegate {
                 if let variation = order.variation {
                      cell.valueLabel.text = "\(order.item) - \(variation)"
                 } else {
-                     cell.valueLabel.text = NSLocalizedString("\(order.item) - Standard", comment: "")
+                    cell.valueLabel.text = String(format: NSLocalizedString("%d - Standard", comment: ""), order.item)
                 }
             }
             return cell

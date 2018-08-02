@@ -28,7 +28,7 @@ extension Order {
     @NSManaged public var checkin_attention: Bool
     @NSManaged public var company: String?
     @NSManaged public var datetime: Date?
-    @NSManaged public var guid: String?
+    @NSManaged public var guid: String
     @NSManaged public var item: Int32
     @NSManaged public var position: Int32
     @NSManaged public var order: String

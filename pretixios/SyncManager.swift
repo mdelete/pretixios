@@ -89,6 +89,20 @@ class SyncManager: NSObject {
         
         UserDefaults.standard.synchronize()
     }
+    
+    public func resyncRedeemed() {
+        let fetchRequest: NSFetchRequest<Order> = Order.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "synced == -1")
+        do {
+            let results = try self.backgroundContext.fetch(fetchRequest)
+            for result in results {
+                print("need to resync \(result.guid)")
+                // FIXME: try to silently redeem orders that failed to sync
+            }
+        } catch {
+            print("Fetch description: \(error.localizedDescription)")
+        }
+    }
 
     public func deleteDatabase() {
         guard let storeURL = persistentContainer.persistentStoreCoordinator.persistentStores.first?.url else {
@@ -118,10 +132,8 @@ class SyncManager: NSObject {
         if viewContext.hasChanges {
             do {
                 try viewContext.save()
-                // FIXME upload changes
             } catch {
-                let nserror = error as NSError
-                fatalError("Unresolved error \(nserror) in save(), \(nserror.userInfo)")
+                fatalError("Unresolved error in save(), \(error.localizedDescription)")
             }
         }
     }
@@ -132,7 +144,7 @@ class SyncManager: NSObject {
                 try backgroundContext.save()
                 NotificationCenter.default.post(name: Notification.Name("syncDone"), object: nil)
             } catch {
-                fatalError("Unresolved error \(error) in saveBackground(), \(error.localizedDescription)")
+                fatalError("Unresolved error in saveBackground(), \(error.localizedDescription)")
             }
         }
     }
@@ -144,7 +156,7 @@ class SyncManager: NSObject {
                 NotificationCenter.default.post(name: Notification.Name("syncUpdate"), object: state)
                 print("Partial save.")
             } catch {
-                fatalError("Unresolved error \(error) in saveBackgroundIntermediate(), \(error.localizedDescription)")
+                fatalError("Unresolved error in saveBackgroundPartial(), \(error.localizedDescription)")
             }
         }
     }

@@ -141,7 +141,7 @@ class InfoView: UIView {
                 self.nameLabel.text = order.attendee_name
                 self.orderCodeLabel.text = order.order
                 self.ticketTypeLabel.text = "\(order.item)"
-                self.printButton.isHidden = true // FIXME
+                self.printButton.isHidden = true // FIXME: enable when printing is implemented
                 self.resultLabel.text = NSLocalizedString("Already redeemed", comment: "")
                 
                 UIView.animate(withDuration: 0.1, animations: {
@@ -158,7 +158,7 @@ class InfoView: UIView {
                 self.nameLabel.text = order.attendee_name
                 self.orderCodeLabel.text = order.order
                 self.ticketTypeLabel.text = "\(order.item)"
-                self.printButton.isHidden = true // FIXME
+                self.printButton.isHidden = true // FIXME: enable when printing is implemented
                 self.resultLabel.text = NSLocalizedString("Valid Ticket", comment: "")
                 
                 UIView.animate(withDuration: 0.1, animations: {

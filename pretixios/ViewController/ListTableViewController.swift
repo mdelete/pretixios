@@ -14,6 +14,8 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
     private let searchController = UISearchController(searchResultsController: nil)
     private var _fetchedResultsController: NSFetchedResultsController<Order>?
     
+    private var syncfails = 0
+    
     var fetchedResultsController: NSFetchedResultsController<Order> {
         if let fetchedResultsController = _fetchedResultsController {
             return fetchedResultsController
@@ -78,12 +80,12 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
     
     private func setTitleWithGuests() {
         let string = NSMutableAttributedString()
-        string.append(NSMutableAttributedString(string: "Attendees\n", attributes: [NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Bold", size: 18.0)!]))
+        string.append(NSMutableAttributedString(string: NSLocalizedString("Attendees\n", comment: ""), attributes: [NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Bold", size: 18.0)!]))
         
         if UserDefaults.standard.bool(forKey: "app_configured") == true {
             let total = Stats.fetchCount(for: "Order", predicate: NSPredicate(value: true), with: SyncManager.sharedInstance.viewContext)
             let checkins = Stats.fetchCount(for: "Order", predicate: NSPredicate(format: "checkin != NULL"), with: SyncManager.sharedInstance.viewContext)
-            let format = NSLocalizedString("\(total) total, \(checkins) checkins", comment: "")
+            let format = String(format: NSLocalizedString("%d total, %d checkins", comment: ""), total, checkins)
             string.append(NSMutableAttributedString(string: format, attributes: [NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Thin", size: 9.0)!, NSAttributedStringKey.foregroundColor: UIColor.darkGray]))
             setTableViewPlaceholder(isEmpty: false)
         } else {
@@ -130,6 +132,7 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
                                                object: nil)
         
         NetworkManager.sharedInstance.getPretixOrders()
+        SyncManager.sharedInstance.resyncRedeemed()
     }
     
     // MARK: - Notifications
@@ -150,6 +153,7 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
         DispatchQueue.main.async {
             self.refreshControl?.endRefreshing()
             self.fetchedResultsController.tryFetch()
+            self.syncfails = Stats.fetchCount(for: "Order", predicate: NSPredicate(format: "synced == -1"), with: SyncManager.sharedInstance.viewContext)
             self.tableView.reloadData()
             self.setTitleWithGuests()
         }
@@ -199,23 +203,39 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
         
         if order.checkin_attention {
             cell.sourceView.backgroundColor = UIColor(red: 255 / 255.0, green: 99 / 255.0, blue: 132 / 255.0, alpha: 1) // Speaker
+        } else if (order.synced == -1) {
+            cell.sourceView.backgroundColor = UIColor.pretixYellowColor
         } else {
-            cell.sourceView.backgroundColor = UIColor(red: 59 / 255.0, green: 28.0/255.0, blue: 74.0/255.0, alpha: 1) // pretix
+            cell.sourceView.backgroundColor = UIColor.clear
         }
 
     }
     
-//    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-//        let guest = self.fetchedResultsController.object(at: indexPath)
-//        return guest.synced == -1;
-//    }
-//
-//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-//        if editingStyle == .delete {
-//            let guest = self.fetchedResultsController.object(at: indexPath)
-//            guest.managedObjectContext?.delete(guest)
-//        }
-//    }
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 22
+        } else {
+            return 0
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 0 && syncfails > 0 {
+            let headerView = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 22))
+            headerView.backgroundColor = UIColor.lightBlue
+            if syncfails == 1 {
+                headerView.text = String(format: NSLocalizedString("%d Checkin not synced. Pull to retry.", comment: ""), syncfails)
+            } else {
+                headerView.text = String(format: NSLocalizedString("%d Checkins not synced. Pull to retry.", comment: ""), syncfails)
+            }
+            headerView.textColor = UIColor.white
+            headerView.textAlignment = .center
+            headerView.font = UIFont(name: "Helvetica", size: 10)
+            return headerView
+        } else {
+            return nil
+        }
+    }
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
         return self.fetchedResultsController.sectionIndexTitles

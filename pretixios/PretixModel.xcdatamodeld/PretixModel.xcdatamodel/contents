@@ -20,7 +20,7 @@
         <attribute name="position" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="secret" attributeType="String" syncable="YES"/>
         <attribute name="status_value" attributeType="String" syncable="YES"/>
-        <attribute name="synced" attributeType="Integer 16" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="synced" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="synctime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="variation" optional="YES" attributeType="Integer 32" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="voucher" optional="YES" attributeType="Integer 32" usesScalarValueType="NO" syncable="YES"/>

@@ -50,3 +50,7 @@
 "%d Checkins not synced. Pull to retry." = "%d Checkins nicht synchronisiert. Ziehen zum wiederholen.";
 "This list is empty. Maybe you need to configure the app first using the scanner or pull down to refresh." = "This list is empty. Maybe you need to configure the app first using the scanner or pull down to refresh.";
 "Attendees\n" = "Teilnehmer\n";
+"No camera access" = "Kein Zugriff auf die Kamera";
+"Please allow camera access in the app settings." = "Bitte erlaube den Kamerazugriff in den Einstellungen der App";
+"This feature is only available with camera access." = "Diese Funktion benötigt Zugriff auf die Kamera.";
+"Camera access has been denied in restrictions." = "Zugriff auf die Kamera wurde in den Einschränkungen verboten.";

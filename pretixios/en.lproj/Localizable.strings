@@ -50,3 +50,9 @@
 "%d Checkins not synced. Pull to retry." = "%d Checkins not synced. Pull to retry.";
 "This list is empty. Maybe you need to configure the app first using the scanner or pull down to refresh." = "This list is empty. Maybe you need to configure the app first using the scanner or pull down to refresh.";
 "Attendees\n" = "Attendees\n";
+"No camera access" = "No camera access";
+"Please allow camera access in the app settings." = "Please allow camera access in the app settings.";
+"This feature is only available with camera access." = "This feature is only available with camera access.";
+"Camera access has been denied in restrictions." = "Camera access has been denied in restrictions.";
+
+

@@ -270,8 +270,6 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         NotificationCenter.default.addObserver(self, selector: #selector(startRunning), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(stopRunning), name: .UIApplicationWillResignActive, object: nil)
         
-        setupCaptureSession()
-        
         //videoCaptureDevice?.addObserver(self, forKeyPath: "adjustingFocus", options: .new, context: nil)
         //videoCaptureDevice?.removeObserver(self, forKeyPath: "adjustingFocus")
         
@@ -281,15 +279,13 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         
         // info view
         infoView.translatesAutoresizingMaskIntoConstraints = false
-        //infoView.resetInfoView()
         containerView.addSubview(infoView)
-        
-        // camera preview view
+
+        // camera preview
         scannerView.translatesAutoresizingMaskIntoConstraints = false
         scannerView.backgroundColor = .black
         containerView.addSubview(scannerView)
-        setupPreviewLayer(view: scannerView)
-        
+
         // laser view
         laserView.translatesAutoresizingMaskIntoConstraints = false
         laserView.backgroundColor = .red
@@ -307,22 +303,22 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             infoView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             infoView.heightAnchor.constraint(equalToConstant: 140.0),
             infoView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            
+
             attentionView.topAnchor.constraint(equalTo: infoView.bottomAnchor),
             attentionView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             attentionView.heightAnchor.constraint(equalToConstant: 30.0),
             attentionView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            
+
             scannerView.topAnchor.constraint(equalTo: infoView.bottomAnchor),
             scannerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             scannerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             scannerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            
+
             laserView.centerXAnchor.constraint(equalTo: scannerView.centerXAnchor),
             laserView.centerYAnchor.constraint(equalTo: scannerView.centerYAnchor),
             laserView.widthAnchor.constraint(equalTo: scannerView.widthAnchor, multiplier: 0.85),
             laserView.heightAnchor.constraint(equalToConstant: 2.0),
-            
+
             containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
@@ -330,6 +326,37 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         ])
     }
     
+    internal func updatePreviewLayer(layer: AVCaptureConnection, orientation: AVCaptureVideoOrientation) {
+        layer.videoOrientation = orientation
+        previewLayer?.frame = self.view.bounds
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if let previewLayerConnection = self.previewLayer?.connection as AVCaptureConnection? {
+            let orientation: UIDeviceOrientation = UIDevice.current.orientation
+            if previewLayerConnection.isVideoOrientationSupported {
+                switch (orientation) {
+                case .portrait: updatePreviewLayer(layer: previewLayerConnection, orientation: .portrait)
+                    break
+
+                case .landscapeRight: updatePreviewLayer(layer: previewLayerConnection, orientation: .landscapeLeft)
+                    break
+
+                case .landscapeLeft: updatePreviewLayer(layer: previewLayerConnection, orientation: .landscapeRight)
+                    break
+
+                case .portraitUpsideDown: updatePreviewLayer(layer: previewLayerConnection, orientation: .portraitUpsideDown)
+                    break
+
+                default: updatePreviewLayer(layer: previewLayerConnection, orientation: .portrait)
+                    break
+                }
+            }
+        }
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if UserDefaults.standard.bool(forKey: "app_configured") == true {
@@ -337,27 +364,26 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         } else {
             self.infoView.resetConfigurationView()
         }
+        checkCaptureSession()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        previewLayer?.frame = scannerView.bounds // FIXME: why isn't autolayout taking care of this?
-        scannerView.bringSubview(toFront: laserView)
         UIView.animate(withDuration: 0.1, delay: 0.2, options:[.repeat, .autoreverse], animations: {
             self.laserView.backgroundColor = .red
             self.laserView.backgroundColor = .orange
         }, completion:nil)
         startRunning()
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         stopRunning()
         laserView.layer.removeAllAnimations()
         super.viewWillDisappear(animated)
     }
-    
+
     // MARK: - KeyValueCoding
-    
+
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "adjustingFocus" {
             if let adjustingFocus = change?[NSKeyValueChangeKey.newKey] as? NSNumber, adjustingFocus.isEqual(to: NSNumber(value: 1)) {
@@ -375,7 +401,7 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             }
         }
     }
-    
+
     @objc private func stopRunning() {
         if captureSession.isRunning {
             DispatchQueue.global(qos: .background).async {
@@ -410,18 +436,12 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     
     // MARK: - Setup
     
-    private func setupPreviewLayer(view: UIView) {
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer!.frame = view.bounds
-        previewLayer!.videoGravity = .resizeAspectFill
-        view.layer.addSublayer(previewLayer!)
-    }
-    
     private func setupCaptureSession() {
-        if let videoCaptureDevice = AVCaptureDevice.default(for: AVMediaType.video) {
+
+        if let videoCaptureDevice = AVCaptureDevice.default(for: .video) {
             do {
                 let videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
-                if (captureSession.canAddInput(videoInput)) {
+                if captureSession.canAddInput(videoInput) {
                     captureSession.addInput(videoInput)
                 } else {
                     print("canAddInput failed")
@@ -431,13 +451,19 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 print("videoInput failed")
                 return
             }
-        } else {
-            checkCaptureSession()
+        }
+        
+        OperationQueue.main.addOperation {
+            self.previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+            self.previewLayer!.frame = self.scannerView.bounds
+            self.previewLayer!.videoGravity = .resizeAspectFill
+            self.scannerView.layer.addSublayer(self.previewLayer!)
+            self.scannerView.bringSubview(toFront: self.laserView)
         }
         
         let metadataOutput = AVCaptureMetadataOutput()
         
-        if (captureSession.canAddOutput(metadataOutput)) {
+        if captureSession.canAddOutput(metadataOutput) {
             captureSession.addOutput(metadataOutput)
             let dispatchQueue = DispatchQueue(label: "CaptureQueue")
             metadataOutput.setMetadataObjectsDelegate(self, queue: dispatchQueue)
@@ -461,20 +487,23 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             setupCaptureSession()
             break
         case .denied:
-            showAlert(title: NSLocalizedString("No camera access", comment: ""), message: NSLocalizedString("Please allow camera access in the privacy settings.", comment: ""))
+            showAlert(title: NSLocalizedString("No camera access", comment: ""),
+                      message: NSLocalizedString("Please allow camera access in the app settings.", comment: ""))
             break
         case .notDetermined:
-            // FIXME: restart capture does not work
             AVCaptureDevice.requestAccess(for: .video) { (granted) in
                 if granted {
                     self.setupCaptureSession()
                 } else {
-                    self.showAlert(title: NSLocalizedString("No camera access", comment: ""), message: NSLocalizedString("This feature is only available with camera access.", comment: ""))
+                    self.showAlert(title: NSLocalizedString("No camera access", comment: ""),
+                                   message: NSLocalizedString("This feature is only available with camera access.", comment: ""))
                 }
             }
             break
         case .restricted:
-            showAlert(title: NSLocalizedString("No camera access", comment: ""), message: NSLocalizedString("Camera access has been denied in settings.", comment: ""))
+            print("restricted")
+            showAlert(title: NSLocalizedString("No camera access", comment: ""),
+                      message: NSLocalizedString("Camera access has been denied in restrictions.", comment: ""))
             break
         }
 #endif

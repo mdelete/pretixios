@@ -317,13 +317,24 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             laserView.centerXAnchor.constraint(equalTo: scannerView.centerXAnchor),
             laserView.centerYAnchor.constraint(equalTo: scannerView.centerYAnchor),
             laserView.widthAnchor.constraint(equalTo: scannerView.widthAnchor, multiplier: 0.85),
-            laserView.heightAnchor.constraint(equalToConstant: 2.0),
-
-            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            laserView.heightAnchor.constraint(equalToConstant: 2.0)
         ])
+        
+        if #available(iOS 11.0, *) {
+            NSLayoutConstraint.activate([
+                containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                containerView.topAnchor.constraint(equalTo: view.topAnchor),
+                containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            ])
+        }
     }
     
     internal func updatePreviewLayer(layer: AVCaptureConnection, orientation: AVCaptureVideoOrientation) {

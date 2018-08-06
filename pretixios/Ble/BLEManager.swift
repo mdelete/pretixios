@@ -64,8 +64,9 @@ class BLEManager: NSObject {
         }
     }
     
-    fileprivate var data = Data()
-    fileprivate var baud = UInt32(1200)
+    fileprivate var receiveQueue = Data()
+    fileprivate var sendQueue = [Data]()
+    fileprivate var baud = UInt32(115200)
     fileprivate var hwfc = false
     
     var baudRate: UInt32 {
@@ -95,7 +96,8 @@ class BLEManager: NSObject {
     
     public func write(data: Data) {
         if let characteristic = uartTxCharacteristic {
-            discoveredPeripheral?.writeValue(data, for: characteristic, type: .withoutResponse)
+            sendQueue = data.chunked(by: 20)
+            discoveredPeripheral?.writeValue(sendQueue.removeFirst(), for: characteristic, type: .withResponse)
         }
     }
     
@@ -126,6 +128,7 @@ class BLEManager: NSObject {
         
         killStopScanTimer()
         uartTxCharacteristic = nil
+        sendQueue.removeAll()
         
         guard let discoveredPeripheral = discoveredPeripheral else {
             return
@@ -183,7 +186,7 @@ extension BLEManager: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         centralManager.stopScan()
-        data.removeAll()
+        receiveQueue.removeAll()
         peripheral.delegate = self
         peripheral.discoverServices([SerialServiceCBUUID])
         delegate?.didUpdate(self, status: "Connected to " + (peripheral.name ?? "uart"))
@@ -242,10 +245,10 @@ extension BLEManager: CBPeripheralDelegate {
             print(error.localizedDescription)
         } else if characteristic == uartRxCharacteristic {
             guard let newData = characteristic.value else { return }
-            data.append(newData)
+            receiveQueue.append(newData)
             if newData[newData.count-1] == 0x0a {
-                delegate?.didReceive(self, message: String(data: data, encoding: .utf8))
-                data.removeAll()
+                delegate?.didReceive(self, message: String(data: receiveQueue, encoding: .utf8))
+                receiveQueue.removeAll()
             }
         } else if characteristic == baudCharacteristic {
             if let value = UInt32(data: characteristic.value) {
@@ -268,21 +271,27 @@ extension BLEManager: CBPeripheralDelegate {
         }
     }
     
-    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor descriptor: CBDescriptor, error: Error?) {
+    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         if let error = error {
             print("write: \(error.localizedDescription)")
         } else {
             print("write successful")
+            if sendQueue.count > 0, characteristic == self.uartTxCharacteristic {
+                peripheral.writeValue(sendQueue.removeFirst(), for: characteristic, type: .withResponse)
+            }
         }
     }
-    
-    // Stub to stop run-time warning
-    func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {}
 }
 
 extension Data {
     var hexString : String {
         return map { String(format: "%02hhx", $0) }.joined()
+    }
+    
+    func chunked(by chunkSize: Int) -> [Data] {
+        return stride(from: 0, to: self.count, by: chunkSize).map {
+            Data(self[$0..<Swift.min($0 + chunkSize, self.count)])
+        }
     }
 }
 

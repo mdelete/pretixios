@@ -19,6 +19,7 @@
 		940A83912101B05F00EA3873 /* CheckinListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A83902101B05F00EA3873 /* CheckinListTableViewController.swift */; };
 		940A83932101B39300EA3873 /* PrintTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A83922101B39300EA3873 /* PrintTableViewController.swift */; };
 		940C4E0B209E592D00FF723F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 940C4E0A209E592D00FF723F /* LaunchScreen.storyboard */; };
+		9461DB132118B32900BA7972 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9461DB122118B32900BA7972 /* SwitchTableViewCell.swift */; };
 		94B168A220C97C67002C9C2E /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B168A120C97C67002C9C2E /* BLEManager.swift */; };
 		94D3E61A2098B04B00FB2894 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3E6192098B04B00FB2894 /* AppDelegate.swift */; };
 		94D3E6232098B04D00FB2894 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94D3E6222098B04D00FB2894 /* Assets.xcassets */; };
@@ -57,6 +58,7 @@
 		940A83902101B05F00EA3873 /* CheckinListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckinListTableViewController.swift; sourceTree = "<group>"; };
 		940A83922101B39300EA3873 /* PrintTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintTableViewController.swift; sourceTree = "<group>"; };
 		940C4E0A209E592D00FF723F /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9461DB122118B32900BA7972 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		94B168A120C97C67002C9C2E /* BLEManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
 		94B168A420CA17C5002C9C2E /* pretixios.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = pretixios.entitlements; sourceTree = "<group>"; };
 		94D3E6162098B04B00FB2894 /* pretixios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pretixios.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -188,6 +190,7 @@
 				94D3E64F2098B86400FB2894 /* LabelTableViewCell.swift */,
 				94D3E63E2098B2EF00FB2894 /* ButtonTableViewCell.swift */,
 				94D3E63D2098B2EF00FB2894 /* TextFieldTableViewCell.swift */,
+				9461DB122118B32900BA7972 /* SwitchTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -304,6 +307,7 @@
 				940A838E2101154C00EA3873 /* Checkinlist+CoreDataClass.swift in Sources */,
 				94D3E63B2098B2E600FB2894 /* PretixModel+Codable.swift in Sources */,
 				940A83842100B86E00EA3873 /* Syncstate+CoreDataClass.swift in Sources */,
+				9461DB132118B32900BA7972 /* SwitchTableViewCell.swift in Sources */,
 				94D3E6352098B2DA00FB2894 /* QrDisplayViewController.swift in Sources */,
 				940A838F2101154C00EA3873 /* Checkinlist+CoreDataProperties.swift in Sources */,
 			);

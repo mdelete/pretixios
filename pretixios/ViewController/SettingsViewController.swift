@@ -21,6 +21,7 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
         self.tableView.rowHeight = 44;
         self.tableView.register(LabelTableViewCell.self, forCellReuseIdentifier: "labelCell")
         self.tableView.register(ButtonTableViewCell.self, forCellReuseIdentifier: "buttonCell")
+        self.tableView.register(SwitchTableViewCell.self, forCellReuseIdentifier: "switchCell")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -48,10 +49,8 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
         
         switch(indexPath.section, indexPath.row) {
         case(0, 0):
-            let cell = tableView.dequeueReusableCell(withIdentifier: "labelCell", for: indexPath) as! LabelTableViewCell // FIXME: switchCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell", for: indexPath) as! SwitchTableViewCell
             cell.label.text = NSLocalizedString("Enable NFC", comment: "")
-            cell.accessoryType = .none
-            cell.selectionStyle = .none
             return cell
             
         case(0, 1):

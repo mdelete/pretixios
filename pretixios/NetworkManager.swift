@@ -454,6 +454,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                         results.first?.position = Int32(position.id)
                                         results.first?.company = result.invoice_address?.company
                                         results.first?.secret = position.secret
+                                        results.first?.pseudonymization_id = position.pseudonymization_id
                                         results.first?.datetime = result.datetime
                                         results.first?.checkin_attention = result.checkin_attention
                                         results.first?.voucher =  position.voucher?.nsNumber
@@ -471,6 +472,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                         order.company = result.invoice_address?.company
                                         order.checkin = checkin
                                         order.secret = position.secret
+                                        order.pseudonymization_id = position.pseudonymization_id
                                         order.datetime = result.datetime
                                         order.checkin_attention = result.checkin_attention
                                         order.synced = 1

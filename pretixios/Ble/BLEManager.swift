@@ -287,7 +287,7 @@ extension Data {
     var hexString : String {
         return map { String(format: "%02hhx", $0) }.joined()
     }
-    
+
     func chunked(by chunkSize: Int) -> [Data] {
         return stride(from: 0, to: self.count, by: chunkSize).map {
             Data(self[$0..<Swift.min($0 + chunkSize, self.count)])

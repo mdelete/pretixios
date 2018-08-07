@@ -38,7 +38,8 @@ Design features
 ---------------
 
 * No dependencies. No storyboards. Pure Swift 4.
-* Targeted for iOS 11.4, but buildable for iOS 10.0 and later.
+* Buildable for iOS 10.0 and later.
+* iPad-compatible.
 
 
 License

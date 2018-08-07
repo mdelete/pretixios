@@ -14,6 +14,8 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
     private let searchController = UISearchController(searchResultsController: nil)
     private var _fetchedResultsController: NSFetchedResultsController<Order>?
     
+    weak var detailTableViewController: DetailTableViewController?
+    
     private var syncfails = 0
     
     var fetchedResultsController: NSFetchedResultsController<Order> {
@@ -43,18 +45,19 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
         
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(refreshControlAction), for: UIControlEvents.valueChanged)
-  
+
         searchController.searchBar.placeholder = NSLocalizedString("Name / Company / Email", comment: "")
         searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.searchBarStyle = .minimal
         
-        if #available(iOS 11.0, *) {
+        if #available(iOS 11.0, *), UIDevice.current.userInterfaceIdiom != .pad {
             navigationItem.searchController = searchController
             navigationItem.hidesSearchBarWhenScrolling = false
             searchController.hidesNavigationBarDuringPresentation = true
         } else {
+            self.navigationController?.navigationBar.isTranslucent = false
             tableView.tableHeaderView = self.searchController.searchBar
             searchController.hidesNavigationBarDuringPresentation = false
             searchController.searchBar.sizeToFit()
@@ -271,9 +274,13 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailViewController = DetailTableViewController()
-        detailViewController.order = self.fetchedResultsController.object(at: indexPath)
-        self.navigationController?.pushViewController(detailViewController, animated: true)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            self.detailTableViewController?.order = self.fetchedResultsController.object(at: indexPath)
+        } else {
+            let detailViewController = DetailTableViewController()
+            detailViewController.order = self.fetchedResultsController.object(at: indexPath)
+            self.navigationController?.pushViewController(detailViewController, animated: true)
+        }
     }
 
     // MARK: - Search Delegates

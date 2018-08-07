@@ -8,9 +8,14 @@
 
 import UIKit
 
-class DetailTableViewController: UITableViewController, ButtonCellDelegate {
+class DetailTableViewController: UITableViewController, ButtonCellDelegate, UISplitViewControllerDelegate {
 
-    var order: Order?
+    var order: Order? {
+        didSet {
+            self.title = order?.attendee_name
+            self.tableView.reloadData()
+        }
+    }
     
     convenience init() {
         self.init(style: .grouped)
@@ -19,6 +24,7 @@ class DetailTableViewController: UITableViewController, ButtonCellDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.rowHeight = 44;
+        self.navigationController?.navigationBar.isTranslucent = false
         self.tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: "textInputCell")
         self.tableView.register(LabelTableViewCell.self, forCellReuseIdentifier: "labelCell")
         self.tableView.register(ButtonTableViewCell.self, forCellReuseIdentifier: "buttonCell")
@@ -182,7 +188,13 @@ class DetailTableViewController: UITableViewController, ButtonCellDelegate {
         }
     }
     
-    // MARK : - ButtonCellDelegate
+    // MARK: - SplitViewControllerDelegate
+    
+    func splitViewController(_ svc: UISplitViewController, willChangeTo displayMode: UISplitViewControllerDisplayMode) {
+        self.navigationItem.setLeftBarButton(nil, animated: true)
+    }
+    
+    // MARK: - ButtonCellDelegate
     
     func buttonTableViewCell(_ cell: ButtonTableViewCell, action: UIButton) {
         

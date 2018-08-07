@@ -77,6 +77,7 @@ struct PretixOrderResponse : Codable {
             let attendee_name : String?
             let attendee_email : String?
             let voucher : Int?
+            let pseudonymization_id : String
             let secret : String
             let checkins : [Result.Position.Checkin]
         }

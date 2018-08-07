@@ -18,6 +18,7 @@
         <attribute name="item" attributeType="Integer 32" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="order" attributeType="String" syncable="YES"/>
         <attribute name="position" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="pseudonymization_id" attributeType="String" syncable="YES"/>
         <attribute name="secret" attributeType="String" syncable="YES"/>
         <attribute name="status_value" attributeType="String" syncable="YES"/>
         <attribute name="synced" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -52,7 +53,7 @@
     </entity>
     <elements>
         <element name="Checkinlist" positionX="-27" positionY="144" width="128" height="105"/>
-        <element name="Order" positionX="-63" positionY="-18" width="128" height="300"/>
+        <element name="Order" positionX="-63" positionY="-18" width="128" height="315"/>
         <element name="Syncstate" positionX="-36" positionY="9" width="128" height="105"/>
         <element name="Voucher" positionX="-18" positionY="108" width="128" height="300"/>
     </elements>

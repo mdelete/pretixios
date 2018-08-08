@@ -26,8 +26,10 @@ class SwitchTableViewCell: UITableViewCell {
     fileprivate func setup() {
         self.selectionStyle = UITableViewCellSelectionStyle.none
         
-        label.font = UIFont(name: "HelveticaNeue", size: 17.0)
+        //label.font = UIFont(name: "HelveticaNeue", size: 17.0)
+        label.font = .preferredFont(forTextStyle: .body)
         label.textColor = UIColor.darkText
+        label.adjustsFontForContentSizeCategory = true
         label.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(label)
         

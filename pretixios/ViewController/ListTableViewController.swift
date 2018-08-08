@@ -41,7 +41,7 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
         super.viewDidLoad()
         
         self.tableView.register(AttendeeTableViewCell.self, forCellReuseIdentifier: "cell")
-        self.tableView.rowHeight = 44.0
+        self.tableView.estimatedRowHeight = 44.5
         
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(refreshControlAction), for: UIControlEvents.valueChanged)

@@ -23,8 +23,8 @@ class DetailTableViewController: UITableViewController, ButtonCellDelegate, UISp
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.rowHeight = 44;
         self.navigationController?.navigationBar.isTranslucent = false
+        self.tableView.estimatedRowHeight = 44.5
         self.tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: "textInputCell")
         self.tableView.register(LabelTableViewCell.self, forCellReuseIdentifier: "labelCell")
         self.tableView.register(ButtonTableViewCell.self, forCellReuseIdentifier: "buttonCell")

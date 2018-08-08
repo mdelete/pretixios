@@ -18,7 +18,7 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = NSLocalizedString("Settings", comment: "")
-        self.tableView.rowHeight = 44;
+        self.tableView.estimatedRowHeight = 44.5
         self.tableView.register(LabelTableViewCell.self, forCellReuseIdentifier: "labelCell")
         self.tableView.register(ButtonTableViewCell.self, forCellReuseIdentifier: "buttonCell")
         self.tableView.register(SwitchTableViewCell.self, forCellReuseIdentifier: "switchCell")

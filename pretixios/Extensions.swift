@@ -144,14 +144,6 @@ extension UIColor {
     
 }
 
-extension UIFont {
-
-    static let defaultFontRegular = UIFont.systemFont(ofSize: 16.0, weight: .regular)
-    static let defaultFontBold = UIFont.systemFont(ofSize: 16.0, weight: .bold)
-    static let largeFontRegular = UIFont.systemFont(ofSize: 24.0, weight: .regular)
-    static let largeFontBold = UIFont.systemFont(ofSize: 24.0, weight: .bold)
-}
-
 extension Int {
     var nsNumber : NSNumber {
         return NSNumber(value: self)

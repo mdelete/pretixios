@@ -29,7 +29,8 @@ class AttentionView : UIView {
         attentionLabel.text = NSLocalizedString("Special Ticket!", comment: "")
         attentionLabel.numberOfLines = 0
         attentionLabel.textAlignment = .center
-        attentionLabel.font = .largeFontBold
+        attentionLabel.font = .preferredFont(forTextStyle: .headline)
+        attentionLabel.adjustsFontForContentSizeCategory = true
         attentionLabel.textColor = .pretixWhiteColor
         attentionLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -68,32 +69,32 @@ class InfoView: UIView {
         resultLabel.text = NSLocalizedString("Please scan a ticket", comment: "")
         resultLabel.numberOfLines = 0
         resultLabel.textAlignment = .center
-        resultLabel.font = .largeFontBold
+        resultLabel.font = .preferredFont(forTextStyle: .largeTitle)
+        resultLabel.adjustsFontForContentSizeCategory = true
         resultLabel.textColor = .black
         resultLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        //ticketTypeLabel.text = "Sommerfest Gin only Ticket"
         ticketTypeLabel.numberOfLines = 1
         ticketTypeLabel.textAlignment = .left
-        ticketTypeLabel.font = .defaultFontRegular
+        ticketTypeLabel.font = .preferredFont(forTextStyle: .body)
+        ticketTypeLabel.adjustsFontForContentSizeCategory = true
         ticketTypeLabel.textColor = .black
         ticketTypeLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        //orderCodeLabel.text = "AAAAA"
         orderCodeLabel.numberOfLines = 1
         orderCodeLabel.textAlignment = .left
-        orderCodeLabel.font = .defaultFontRegular
+        orderCodeLabel.font = .preferredFont(forTextStyle: .body)
+        orderCodeLabel.adjustsFontForContentSizeCategory = true
         orderCodeLabel.textColor = .black
         orderCodeLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        //nameLabel.text = "Dr. Ignatius von Hirnknick"
         nameLabel.numberOfLines = 1
         nameLabel.textAlignment = .right
-        nameLabel.font = .defaultFontRegular
+        nameLabel.font = .preferredFont(forTextStyle: .body)
+        nameLabel.adjustsFontForContentSizeCategory = true
         nameLabel.textColor = .black
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        //printButton.backgroundColor = .red
         printButton.setTitle(NSLocalizedString("Print Badge", comment: ""), for: UIControlState.normal)
         printButton.translatesAutoresizingMaskIntoConstraints = false
         printButton.isHidden = true

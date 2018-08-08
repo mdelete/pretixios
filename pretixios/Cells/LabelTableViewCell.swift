@@ -27,15 +27,19 @@ class LabelTableViewCell: UITableViewCell {
         self.selectionStyle = UITableViewCellSelectionStyle.default
         self.accessoryType = .disclosureIndicator
         
-        label.font = UIFont(name: "HelveticaNeue", size: 17.0)
+        //label.font = UIFont(name: "HelveticaNeue", size: 17.0)
+        label.font = .preferredFont(forTextStyle: .body)
         label.textColor = UIColor.darkText
+        label.adjustsFontForContentSizeCategory = true
         label.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(label)
         
-        valueLabel.font = UIFont(name: "HelveticaNeue", size: 17.0)
+        //valueLabel.font = UIFont(name: "HelveticaNeue", size: 17.0)
+        valueLabel.font = .preferredFont(forTextStyle: .body)
         valueLabel.textColor = UIColor.lightGray
         valueLabel.adjustsFontSizeToFitWidth = true
         valueLabel.textAlignment = .right
+        valueLabel.adjustsFontForContentSizeCategory = true
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(valueLabel)
     }

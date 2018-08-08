@@ -33,19 +33,25 @@ class AttendeeTableViewCell : UITableViewCell {
         sourceView.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(sourceView)
         
-        nameLabel.font = UIFont(name: "HelveticaNeue", size: 17.0)
+        //nameLabel.font = UIFont(name: "HelveticaNeue", size: 17.0)
+        nameLabel.font = .preferredFont(forTextStyle: .body)
         nameLabel.textColor = UIColor.darkText
+        nameLabel.adjustsFontForContentSizeCategory = true
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(nameLabel)
         
-        stateLabel.font = UIFont(name: "HelveticaNeue", size: 11.0)
+        //stateLabel.font = UIFont(name: "HelveticaNeue", size: 11.0)
+        stateLabel.font = .preferredFont(forTextStyle: .callout)
         stateLabel.textColor = UIColor.lightBlue
         stateLabel.textAlignment = .right
+        stateLabel.adjustsFontForContentSizeCategory = true
         stateLabel.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(stateLabel)
         
-        auxiliaryLabel.font = UIFont(name: "HelveticaNeue", size: 11.0)
+        //auxiliaryLabel.font = UIFont(name: "HelveticaNeue", size: 11.0)
+        auxiliaryLabel.font = .preferredFont(forTextStyle: .callout)
         auxiliaryLabel.textColor = UIColor.lightGray
+        auxiliaryLabel.adjustsFontForContentSizeCategory = true
         auxiliaryLabel.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(auxiliaryLabel)
         

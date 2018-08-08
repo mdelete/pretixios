@@ -54,18 +54,22 @@ class TextFieldTableViewCell: UITableViewCell, UITextFieldDelegate {
     fileprivate func setup() {
         self.selectionStyle = UITableViewCellSelectionStyle.none
         
-        label.font = UIFont(name: "HelveticaNeue", size: 17.0)
+        //label.font = UIFont(name: "HelveticaNeue", size: 17.0)
+        label.font = .preferredFont(forTextStyle: .body)
         label.textColor = UIColor.darkText
+        label.adjustsFontForContentSizeCategory = true
         label.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(label)
         
-        textField.font = UIFont(name: "HelveticaNeue", size: 17.0)
+        //textField.font = UIFont(name: "HelveticaNeue", size: 17.0)
+        textField.font = .preferredFont(forTextStyle: .body)
         textField.textColor = UIColor(red: 0.275, green:0.376, blue:0.522, alpha:1.000)
         textField.textAlignment = .right
         textField.keyboardType = .default
         textField.autocorrectionType = .no;
         textField.autocapitalizationType = .words;
         textField.delegate = self
+        textField.adjustsFontForContentSizeCategory = true
         textField.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(textField)
         self.contentView.addGestureRecognizer(UIGestureRecognizer(target: self.textField, action: #selector(becomeFirstResponder)))

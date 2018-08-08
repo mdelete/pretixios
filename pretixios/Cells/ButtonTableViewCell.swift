@@ -41,7 +41,10 @@ class ButtonTableViewCell: UITableViewCell {
 
         let color = UIColor.lightBlue
         
-        button.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 16.0)
+        //button.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 16.0)
+        button.titleLabel?.font = .preferredFont(forTextStyle: .body)
+        button.titleLabel?.textAlignment = .center
+        button.titleLabel?.adjustsFontForContentSizeCategory = true
         button.setTitleColor(color, for: .normal)
         button.setTitleColor(color, for: .selected)
         button.setTitleColor(color, for: .highlighted)
@@ -56,8 +59,10 @@ class ButtonTableViewCell: UITableViewCell {
     
         NSLayoutConstraint.activate([
             button.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
-            button.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
-            button.widthAnchor.constraint(equalToConstant: 200)
+            //button.heightAnchor.constraint(equalToConstant: 44.5),
+            button.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+            button.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            button.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.8)
         ])
         
     }

@@ -25,23 +25,24 @@ class NetworkManager : NSObject, URLSessionDelegate {
             let dateString = try container.decode(String.self)
             var optionalDate : Date?
  
-            // CONSIDER: since iOS11 ISO8601DateFormatter can do fractional seconds
-            //let dateFormatter = ISO8601DateFormatter()
-            //formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
             switch(dateString.count) {
+            case 32:
+                fallthrough
             case 27:
                 let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSSZ" // matches 2018-03-15T21:10:08.346852Z
+                formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSSZ"
                 optionalDate = formatter.date(from: dateString)
             default:
                 let formatter = ISO8601DateFormatter()
+                // since iOS11 ISO8601DateFormatter can do fractional seconds but it seems to be broken
+                // formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
                 optionalDate = formatter.date(from: dateString)
             }
-            
+
             guard let date = optionalDate else {
                 throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date string \(dateString) for \(decoder.codingPath)")
             }
-            
+
             return date
         })
         return decoder
@@ -442,6 +443,8 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                 let guid = "\(result.code)-\(position.id)"
                                 
                                 fetchRequest.predicate = NSPredicate(format: "guid == %@", guid)
+                                
+                                print("PSEUDO: \(position.pseudonymization_id)")
                                 
                                 do {
                                     let results = try context.fetch(fetchRequest)

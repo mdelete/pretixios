@@ -69,7 +69,7 @@ class InfoView: UIView {
         resultLabel.text = NSLocalizedString("Please scan a ticket", comment: "")
         resultLabel.numberOfLines = 0
         resultLabel.textAlignment = .center
-        resultLabel.font = .preferredFont(forTextStyle: .largeTitle)
+        resultLabel.font = .preferredFont(forTextStyle: .title1)
         resultLabel.adjustsFontForContentSizeCategory = true
         resultLabel.textColor = .black
         resultLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -566,7 +566,8 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                                     self.infoView.setInfoView(order: order, result: response)
                                 }
                             } else {
-                                print("HORROR! TOO MANY RESULTS")
+                                // invalid ticket
+                                print("HORROR! NO OR MANY RESULTS!")
                             }
                         } catch {
                             print("Fetch error: \(error.localizedDescription)")

@@ -444,8 +444,6 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                 
                                 fetchRequest.predicate = NSPredicate(format: "guid == %@", guid)
                                 
-                                print("PSEUDO: \(position.pseudonymization_id)")
-                                
                                 do {
                                     let results = try context.fetch(fetchRequest)
                                     if results.count == 1 {

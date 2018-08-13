@@ -23,7 +23,7 @@ class TabBarController: UITabBarController {
         scanViewController.tabBarItem = UITabBarItem(title: NSLocalizedString("Scan", comment: ""), image: UIImage(named: "Scan"), tag: TabBarIndex.Scanner.rawValue)
         
         let statusTableViewController = UINavigationController(rootViewController: SettingsViewController())
-        statusTableViewController.tabBarItem = UITabBarItem(title: NSLocalizedString("Settings", comment: ""), image: UIImage(named: "Status"), tag: TabBarIndex.Status.rawValue)
+        statusTableViewController.tabBarItem = UITabBarItem(title: NSLocalizedString("Settings", comment: ""), image: UIImage(named: "Settings"), tag: TabBarIndex.Status.rawValue)
         
         if UIDevice.current.userInterfaceIdiom == .pad {
             let listTableViewController = ListTableViewController()

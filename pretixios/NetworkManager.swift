@@ -18,6 +18,12 @@ class NetworkManager : NSObject, URLSessionDelegate {
     fileprivate let operationQueue = OperationQueue()
     fileprivate let sessionConfiguration = URLSessionConfiguration.default
     
+    fileprivate let encoder : JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        return encoder
+    }()
+    
     fileprivate let decoder : JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .custom({ (decoder) -> Date in
@@ -173,7 +179,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
         var request = URLRequest(url: URL(string: base + "/checkinlists/\(list)/positions/\(order.position)/redeem/")!)
         request.httpMethod = "POST"
         request.setValue("Token " + token, forHTTPHeaderField: "Authorization")
-        request.httpBody = try? JSONEncoder().encode(PretixRedeemRequestBody(force: false, ignore_unpaid: true, nonce: "", datetime: order.checkin, questions_supported: false, answers: nil))
+        request.httpBody = try? self.encoder.encode(PretixRedeemRequestBody(force: false, ignore_unpaid: true, nonce: "", datetime: order.checkin, questions_supported: false, answers: nil))
         // FIXME: include nonce in sync process
         
         let dataTask = session.dataTask(with: request, completionHandler: { (data, response, neterror) -> Void in

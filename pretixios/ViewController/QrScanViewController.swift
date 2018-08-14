@@ -559,11 +559,16 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                         do {
                             let orders = try SyncManager.sharedInstance.viewContext.fetch(fetchRequest)
                             if let order = orders.first {
-                                order.checkin = Date()
-                                order.synced = -1
-                                SyncManager.sharedInstance.save()
-                                NetworkManager.sharedInstance.postPretixRedeem(order: order) { (response, error) in
-                                    self.infoView.setInfoView(order: order, result: response)
+                                if let _ = order.checkin {
+                                    // already checked in
+                                    self.infoView.setInfoView(order: order, result: PretixRedeemResponse(status: .ok, reason: .already_redeemed))
+                                } else {
+                                    order.checkin = Date()
+                                    order.synced = -1
+                                    SyncManager.sharedInstance.save()
+                                    NetworkManager.sharedInstance.postPretixRedeem(order: order) { (response, error) in
+                                        self.infoView.setInfoView(order: order, result: response)
+                                    }
                                 }
                             } else {
                                 // invalid ticket

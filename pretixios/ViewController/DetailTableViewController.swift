@@ -182,7 +182,7 @@ class DetailTableViewController: UITableViewController, ButtonCellDelegate, UISp
             self.navigationController?.pushViewController(statusViewController, animated: true)
         case(.Status,1):
             let qrViewController = QrDisplayViewController()
-            qrViewController.qrstring = order?.secret
+            qrViewController.content = order?.secret
             self.navigationController?.pushViewController(qrViewController, animated: true)
         default: ()
         }

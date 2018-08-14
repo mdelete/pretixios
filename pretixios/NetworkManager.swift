@@ -453,18 +453,19 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                 do {
                                     let results = try context.fetch(fetchRequest)
                                     if results.count == 1 {
+                                        results.first?.order = position.order
                                         results.first?.attendee_name = position.attendee_name
                                         results.first?.attendee_email = position.attendee_email
-                                        results.first?.order = position.order
                                         results.first?.status = result.status
                                         results.first?.item = Int32(position.item)
+                                        results.first?.voucher =  position.voucher?.nsNumber
                                         results.first?.position = Int32(position.id)
                                         results.first?.company = result.invoice_address?.company
                                         results.first?.secret = position.secret
+                                        results.first?.checkin = checkin
                                         results.first?.pseudonymization_id = position.pseudonymization_id
                                         results.first?.datetime = result.datetime
                                         results.first?.checkin_attention = result.checkin_attention
-                                        results.first?.voucher =  position.voucher?.nsNumber
                                         print("Remote update \(guid)")
                                     } else if (results.count == 0) {
                                         let order = Order(context: context)
@@ -477,12 +478,11 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                         order.voucher = position.voucher?.nsNumber
                                         order.position = Int32(position.id)
                                         order.company = result.invoice_address?.company
-                                        order.checkin = checkin
                                         order.secret = position.secret
+                                        order.checkin = checkin
                                         order.pseudonymization_id = position.pseudonymization_id
                                         order.datetime = result.datetime
                                         order.checkin_attention = result.checkin_attention
-                                        order.synced = 1
                                         print("Remote new \(guid)")
                                     } else {
                                         print("HORROR! \(results.count)")

@@ -7,12 +7,18 @@
 //
 
 import UIKit
+import CoreData
 
 class PrintTableViewController: UITableViewController, UIPrintInteractionControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Testbadge", comment: ""),
+                                                                 style: UIBarButtonItemStyle.done,
+                                                                 target: self,
+                                                                 action: #selector(printBadgeAirPrint))
     }
     
     // MARK: - Table view data source
@@ -38,53 +44,61 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
     
     // MARK: - AirPrint
 
-    class Badge : UIPrintPaper {
+    class Badge: UIPrintPaper {
         
-        let ppmm : CGFloat = 2.835 // 72 ppi -> 2,835 ppmm
+        private let size = CGSize(width: 283, height: 176) // 100mm x 62mm
         
-        var printSize = CGSize()
-        var cutOnWidth = true
-        
-        override init() {
-            super.init()
-            printSize = CGSize(width: 10 * ppmm, height: 6.2 * ppmm) // default badge is 100mm wide and 62mm high
-        }
-        
-        convenience init(mmSize: CGSize) {
-            self.init()
-            printSize = CGSize(width: mmSize.width * ppmm, height: mmSize.height * ppmm)
+        override var paperSize: CGSize {
+            return size
         }
         
         override var printableRect: CGRect {
-            return CGRect(origin: CGPoint.zero, size: printSize)
+            return CGRect(origin: CGPoint(x: 0, y: 6), size: size)
         }
         
-        func cut() -> CGFloat {
-            return cutOnWidth ? printSize.width : printSize.height
+        var cut: CGFloat {
+            return size.width
         }
     }
     
-    var savedPrinter : UIPrinter?
-    let modelName = "Prof. Dr. Karl-Wilhelm-Ignatius von Weissviel zu Hirnknick"
-    let modelCompany = "Bigdata Very Longname GmbH & Co. KGaA"
-    let modelSpecial = "Speaker"
+    var maxName = ""
+    var maxCompany = ""
     
-    func printBadgeAirPrint() {
-        if let printer = savedPrinter {
-            self.printBadgeWithPrinter(printer)
-        } else {
-            let printerPicker = UIPrinterPickerController(initiallySelectedPrinter: nil)
-            if UIUserInterfaceIdiom.pad == UIDevice.current.userInterfaceIdiom {
-                printerPicker.present(from: self.navigationItem.rightBarButtonItem!, animated: true) { (picker, userDidSelect, error) in
-                    if userDidSelect, let selectedPrinter = picker.selectedPrinter {
-                        self.printBadgeWithPrinter(selectedPrinter)
-                    }
+    @objc func printBadgeAirPrint() {
+       
+        let fetchRequest : NSFetchRequest<Order> = Order.fetchRequest()
+        
+        if let results = try? SyncManager.sharedInstance.backgroundContext.fetch(fetchRequest) {
+            results.forEach { (order) in
+                if let n = order.attendee_name, n.count > maxName.count {
+                    maxName = n
                 }
-            } else {
-                printerPicker.present(animated: true) { (picker, userDidSelect, error) in
-                    if userDidSelect, let selectedPrinter = picker.selectedPrinter {
-                        self.printBadgeWithPrinter(selectedPrinter)
-                    }
+                if let c = order.company, c.count > maxCompany.count {
+                    maxCompany = c
+                }
+            }
+        } else {
+            print("Nothing found")
+        }
+        
+        
+        let printerPicker = UIPrinterPickerController(initiallySelectedPrinter: nil)
+        if UIUserInterfaceIdiom.pad == UIDevice.current.userInterfaceIdiom {
+            printerPicker.present(from: self.navigationItem.rightBarButtonItem!, animated: true) { (picker, userDidSelect, error) in
+                if userDidSelect, let selectedPrinter = picker.selectedPrinter {
+                    self.printBadgeWithPrinter(selectedPrinter)
+                    print("printer url: \(selectedPrinter.url)")
+                    UserDefaults.standard.set(selectedPrinter.url, forKey: "last_used_printer")
+                    UserDefaults.standard.synchronize()
+                }
+            }
+        } else {
+            printerPicker.present(animated: true) { (picker, userDidSelect, error) in
+                if userDidSelect, let selectedPrinter = picker.selectedPrinter {
+                    self.printBadgeWithPrinter(selectedPrinter)
+                    print("printer url: \(selectedPrinter.url)")
+                    UserDefaults.standard.set(selectedPrinter.url, forKey: "last_used_printer")
+                    UserDefaults.standard.synchronize()
                 }
             }
         }
@@ -95,42 +109,73 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
         let pc = UIPrintInteractionController.shared
         let printInfo = UIPrintInfo.printInfo()
         
-        printInfo.jobName = "AirPrint"
+        printInfo.jobName = "Badge"
         printInfo.orientation = .landscape
         printInfo.outputType = .general // .grayscale should be better for text only output
-        if let printerID = UserDefaults.standard.string(forKey: "last_used_printer") {
-            printInfo.printerID = printerID
-        }
+        
         pc.showsNumberOfCopies = false
         pc.printInfo = printInfo
         pc.delegate = self
         
-        let attributeName = [ NSAttributedStringKey.font: UIFont(name: "Helvetica-Bold", size: 25.0)! ]
-        let attributedStringName = NSMutableAttributedString(string: modelName, attributes: attributeName)
-        
+        let attributeName = [ NSAttributedStringKey.font: UIFont(name: "Helvetica-Bold", size: 24.0)! ]
         let attributeOther = [ NSAttributedStringKey.font: UIFont(name: "Helvetica", size: 20.0)! ]
-        let attributedStringCompany = NSAttributedString(string: "\n\n" + modelCompany, attributes: attributeOther)
         
-        let attributedStringSpecial = NSAttributedString(string: "\n\n" + modelSpecial, attributes: attributeOther)
-    
+        let attributedStringName = NSMutableAttributedString(string: maxName, attributes: attributeName)
+        let attributedStringCompany = NSAttributedString(string: "\n\n" + maxCompany, attributes: attributeOther)
+        // FIXME: print barcode
+        //let attributedStringSpecial = NSAttributedString(string: "\n\n" + maxSpecial, attributes: attributeOther)
+        
         attributedStringName.append(attributedStringCompany)
-        attributedStringName.append(attributedStringSpecial)
+        //attributedStringName.append(attributedStringSpecial)
+        
+        let formatter = UISimpleTextPrintFormatter(attributedText: attributedStringName)
+        formatter.textAlignment = .center
+        
+        pc.printFormatter = formatter
+        pc.present(animated: true, completionHandler: nil)
+    }
+    
+    func printBadgeWithConfiguredPrinter(first: String, second: String, third: String? = nil) {
+        
+        guard let printerURL = UserDefaults.standard.url(forKey: "last_used_printer") else {
+            print("No last used printer")
+            return
+        }
+        
+        let p = UIPrinter(url: printerURL)
+        let pc = UIPrintInteractionController.shared
+        let printInfo = UIPrintInfo.printInfo()
+        
+        //printInfo.printerID = printerID
+        printInfo.jobName = "Badge"
+        printInfo.orientation = .landscape
+        printInfo.outputType = .general // .grayscale should be better for text only output
+        
+        pc.showsNumberOfCopies = false
+        pc.printInfo = printInfo
+        pc.delegate = self
+        
+        let attributeName = [ NSAttributedStringKey.font: UIFont(name: "Helvetica-Bold", size: 24.0)! ]
+        let attributeOther = [ NSAttributedStringKey.font: UIFont(name: "Helvetica", size: 20.0)! ]
+        
+        let attributedStringName = NSMutableAttributedString(string: first, attributes: attributeName)
+        let attributedStringCompany = NSAttributedString(string: "\n\n" + second, attributes: attributeOther)
+        
+        attributedStringName.append(attributedStringCompany)
+        
+        if let third = third {
+            let attributedStringSpecial = NSAttributedString(string: "\n\n" + third, attributes: attributeOther)
+            attributedStringName.append(attributedStringSpecial)
+        }
         
         let formatter = UISimpleTextPrintFormatter(attributedText: attributedStringName)
         formatter.textAlignment = .center
         pc.printFormatter = formatter
-        
-        pc.print(to: printer) { (printInteractionController, completed, error) in
+        pc.print(to: p) { (printInteractionController, completed, error) in
             if !completed, let error = error {
                 print("Print failed: \(error)")
-                self.savedPrinter = nil
-            } else {
-                print("Printer used: \(pc.printInfo?.printerID ?? "unknown")")
-                if self.savedPrinter != printer {
-                    self.savedPrinter = printer
-                    UserDefaults.standard.set(pc.printInfo?.printerID, forKey: "last_used_printer")
-                    UserDefaults.standard.synchronize()
-                }
+                UserDefaults.standard.removeObject(forKey: "last_used_printer")
+                UserDefaults.standard.synchronize()
             }
         }
     }
@@ -142,6 +187,6 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
     }
     
     func printInteractionController(_ printInteractionController: UIPrintInteractionController, cutLengthFor paper: UIPrintPaper) -> CGFloat {
-        return Badge().cut()
+        return Badge().cut
     }
 }

@@ -11,6 +11,10 @@ import CoreData
 
 class PrintTableViewController: UITableViewController, UIPrintInteractionControllerDelegate {
     
+    convenience init() {
+        self.init(style: .grouped)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -21,20 +25,53 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
                                                                  action: #selector(printBadgeAirPrint))
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // read printer setting
+    }
+    
     // MARK: - Table view data source
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch(section) {
+        case 0:
+            return NSLocalizedString("Printing method", comment: "")
+        default: return ""
+        }
+    }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return 4
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.accessoryType = .none
-        cell.selectionStyle = .none
+        switch indexPath.row {
+        case 0:
+            cell.textLabel?.text = NSLocalizedString("None", comment: "")
+            cell.accessoryType = .none
+            cell.selectionStyle = .none
+            cell.textLabel?.textColor = UIColor.gray
+        case 1:
+            cell.textLabel?.text = NSLocalizedString("AirPrint", comment: "AirPrint is a brand name")
+            cell.accessoryType = .checkmark
+            cell.selectionStyle = .none
+        case 2:
+            cell.textLabel?.text = NSLocalizedString("MQTT", comment: "")
+            cell.accessoryType = .none
+            cell.selectionStyle = .none
+            cell.textLabel?.textColor = UIColor.gray
+        case 3:
+            cell.textLabel?.text = NSLocalizedString("Bluetooth Serial", comment: "")
+            cell.accessoryType = .none
+            cell.selectionStyle = .none
+            cell.textLabel?.textColor = UIColor.gray
+        default: ()
+        }
         return cell
     }
     

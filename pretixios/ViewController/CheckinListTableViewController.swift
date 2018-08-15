@@ -42,7 +42,7 @@ class CheckinListTableViewController: UITableViewController, NSFetchedResultsCon
         refreshControl?.addTarget(self, action: #selector(refreshControlAction), for: UIControlEvents.valueChanged)
         
         self.definesPresentationContext = true;
-        self.title = NSLocalizedString("Checkin lists", comment: "")
+        self.title = NSLocalizedString("Check-in list", comment: "")
         
         self.fetchedResultsController.tryFetch()
     }

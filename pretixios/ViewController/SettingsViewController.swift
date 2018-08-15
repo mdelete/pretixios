@@ -56,11 +56,12 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
         case(0, 1):
             let cell = tableView.dequeueReusableCell(withIdentifier: "labelCell", for: indexPath) as! LabelTableViewCell
             cell.label.text = NSLocalizedString("Badge print", comment: "")
+            cell.valueLabel.text = NSLocalizedString("AirPrint", comment: "AirPrint is a brand name")
             return cell
         // FIXME: off, ble serial, airprint (if off, hide button in scanner)
         case(0, 2):
             let cell = tableView.dequeueReusableCell(withIdentifier: "labelCell", for: indexPath) as! LabelTableViewCell
-            cell.label.text = NSLocalizedString("Checkin list", comment: "")
+            cell.label.text = NSLocalizedString("Check-in list", comment: "")
             return cell
         // FIXME: display name of list and display chooser
         case(1, 0):
@@ -81,8 +82,6 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
             return NSLocalizedString("Settings", comment: "")
         case 1:
             return NSLocalizedString("Reset Configuration", comment: "")
-        //case 2:
-        //    return NSLocalizedString("Additional Info", comment: "")
         default: return ""
         }
     }
@@ -102,30 +101,26 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
     // MARK : - ButtonCellDelegate
     
     func buttonTableViewCell(_ cell: ButtonTableViewCell, action: UIButton) {
-        let context = LAContext()
-        let localizedReasonString = NSLocalizedString("You are about to delete all pretix data on this device", comment: "")
-        var authError: NSError?
         
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &authError) {
-            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: localizedReasonString) { success, evaluateError in
-                if success {
-                    // User authenticated successfully, take appropriate action
-                    KeychainService.deletePassword(key: "pretix_api_token")
-                    UserDefaults.standard.removeObject(forKey: "pretix_api_base")
-                    UserDefaults.standard.removeObject(forKey: "pretix_checkin_list")
-                    UserDefaults.standard.set(false, forKey: "reset_preference")
-                    UserDefaults.standard.set(false, forKey: "app_configured")
-                    UserDefaults.standard.synchronize()
-                    SyncManager.sharedInstance.deleteDatabase()
-                } else {
-                    // User did not authenticate successfully, look at error and take appropriate action
-                    print("fail: \(evaluateError!)")
-                }
-            }
-        } else {
-            // Could not evaluate policy; look at authError and present an appropriate message to user
-            print("error: \(authError!)")
-        }
+        let alert = UIAlertController(title: NSLocalizedString("Reset Configuration", comment: ""), message: NSLocalizedString("You are about to delete all pretix data on this device", comment: ""), preferredStyle: .alert)
+        
+        let confirmAction = UIAlertAction(title: NSLocalizedString("Delete", comment: ""), style: .destructive, handler: { _ in
+            KeychainService.deletePassword(key: "pretix_api_token")
+            UserDefaults.standard.removeObject(forKey: "pretix_api_base")
+            UserDefaults.standard.removeObject(forKey: "pretix_checkin_list")
+            UserDefaults.standard.set(false, forKey: "reset_preference")
+            UserDefaults.standard.set(false, forKey: "app_configured")
+            UserDefaults.standard.synchronize()
+            SyncManager.sharedInstance.deleteDatabase()
+        })
+        
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: { _ in
+            print("Cancelled")
+        })
+        
+        alert.addAction(confirmAction)
+        alert.addAction(cancelAction)
+        
+        self.present(alert, animated: true, completion: nil)
     }
-    
 }

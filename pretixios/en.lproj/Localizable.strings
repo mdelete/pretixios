@@ -34,6 +34,7 @@
 "Email" = "Email";
 "Position" = "Position";
 "Please scan a ticket" = "Please scan a ticket";
+"Please scan a configuration code" = "Please scan a configuration code";
 "Print Badge" = "Print Badge";
 "Invalid Ticket" = "Invalid Ticket";
 "Valid Ticket" = "Valid Ticket";
@@ -54,5 +55,14 @@
 "Please allow camera access in the app settings." = "Please allow camera access in the app settings.";
 "This feature is only available with camera access." = "This feature is only available with camera access.";
 "Camera access has been denied in restrictions." = "Camera access has been denied in restrictions.";
-
-
+"Printing method" = "Printing method";
+"None" = "None";
+"AirPrint" = "AirPrint";
+"MQTT" = "MQTT";
+"Bluetooth Serial" = "Bluetooth Serial";
+"Testbadge" = "Testbadge";
+"Check-in list" = "Check-in list";
+"Enable NFC" = "Enable NFC";
+"Delete configuration & data" = "Delete configuration & data";
+"Delete" = "Delete";
+"Cancel" = "Cancel";

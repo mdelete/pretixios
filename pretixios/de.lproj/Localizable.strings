@@ -13,7 +13,7 @@
 "Checkin" = "Eincheckzeit";
 "Name / Company / Email" = "Name / Firma / Email";
 "%d total, %d checkins" = "%d gesamt, %d eingecheckt";
-"You are about to delete all pretix data on this device" = "Bestätigen, um alle Event-Daten vom Gerät zu löschen";
+"You are about to delete all pretix data on this device" = "Dies löscht alle Ticket-Daten auf dem Gerät und setzt die Konfiguration zurück";
 "Pending" = "Offen";
 "Created" = "Erzeugt";
 "Invitation" = "Einladungscode";
@@ -33,7 +33,8 @@
 "Name" = "Name";
 "Email" = "Email";
 "Position" = "Position";
-"Please scan a ticket" = "Scannen Sie ein Ticket ein";
+"Please scan a ticket" = "Scanne ein Ticket ein";
+"Please scan a configuration code" = "Scanne einen Konfigurationscode ein";
 "Print Badge" = "Badgedruck";
 "Invalid Ticket" = "Ungültiges Ticket";
 "Valid Ticket" = "Gültiges Ticket";
@@ -54,3 +55,14 @@
 "Please allow camera access in the app settings." = "Bitte erlaube den Kamerazugriff in den Einstellungen der App";
 "This feature is only available with camera access." = "Diese Funktion benötigt Zugriff auf die Kamera.";
 "Camera access has been denied in restrictions." = "Zugriff auf die Kamera wurde in den Einschränkungen verboten.";
+"Printing method" = "Druckeranbindung";
+"None" = "Keine";
+"AirPrint" = "AirPrint";
+"MQTT" = "MQTT";
+"Bluetooth Serial" = "Bluetooth Seriell";
+"Testbadge" = "Testbadge";
+"Check-in list" = "Check-in Liste";
+"Enable NFC" = "NFC aktivieren";
+"Delete configuration & data" = "Konfiguration & Daten löschen";
+"Delete" = "Löschen";
+"Cancel" = "Abbrechen";

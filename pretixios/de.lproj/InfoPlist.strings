@@ -8,3 +8,4 @@
 
 "This App uses NFC to scan ticket tags" = "Die App benutzt NFC um Ticket-Tags zu lesen";
 "This App uses the camera to scan ticket codes" = "Die App benutzt die Kamera um Ticket-Codes zu lesen";
+"This App uses Bluetooth to connect to external barcode scanners or ticket printers" = "Die App nutzt Bluetooth um mit externen Barcode Scannern oder Ticket-Druckern zu verbinden";

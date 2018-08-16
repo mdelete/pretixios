@@ -19,13 +19,15 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NFCReaderUsageDescription</key>
 	<string>This App uses NFC to scan ticket tags</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This App uses the camera to scan ticket codes</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>This App uses Bluetooth to connect to external barcode scanners or ticket printers</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>bluetooth-central</string>

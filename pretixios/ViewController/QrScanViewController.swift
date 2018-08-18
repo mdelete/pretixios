@@ -128,15 +128,15 @@ class InfoView: UIView {
             printButton.heightAnchor.constraint(equalToConstant: 50),
             
             orderCodeLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            orderCodeLabel.topAnchor.constraint(equalTo: ticketTypeLabel.bottomAnchor, constant: 8),
+            orderCodeLabel.topAnchor.constraint(equalTo: ticketTypeLabel.bottomAnchor, constant: 6),
             
             nameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            nameLabel.topAnchor.constraint(equalTo: orderCodeLabel.bottomAnchor, constant: 8)
+            nameLabel.topAnchor.constraint(equalTo: orderCodeLabel.bottomAnchor, constant: 6)
         ])
     }
     
-    public func setInfoView(order: Order, result: PretixRedeemResponse?) {
-        if let reason = result?.reason, reason == .already_redeemed {
+    public func setInfoView(order: Order?, result: PretixRedeemResponse?) {
+        if let order = order, result?.reason == .already_redeemed {
             OperationQueue.main.addOperation {
                 
                 self.nameLabel.text = order.attendee_name
@@ -153,7 +153,7 @@ class InfoView: UIView {
                     self.resultLabel.textColor = .black
                 })
             }
-        } else if result?.status == .ok {
+        } else if let order = order, result?.status == .ok {
             OperationQueue.main.addOperation {
                 
                 self.nameLabel.text = order.attendee_name
@@ -560,7 +560,6 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                             let orders = try SyncManager.sharedInstance.viewContext.fetch(fetchRequest)
                             if let order = orders.first {
                                 if let _ = order.checkin {
-                                    // already checked in
                                     self.infoView.setInfoView(order: order, result: PretixRedeemResponse(status: .ok, reason: .already_redeemed))
                                 } else {
                                     order.checkin = Date()
@@ -571,8 +570,7 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                                     }
                                 }
                             } else {
-                                // invalid ticket
-                                print("HORROR! NO OR MANY RESULTS!")
+                                self.infoView.setInfoView(order: nil, result: nil)
                             }
                         } catch {
                             print("Fetch error: \(error.localizedDescription)")

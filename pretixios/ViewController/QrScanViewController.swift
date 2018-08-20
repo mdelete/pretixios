@@ -436,8 +436,8 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             self.attentionView.attentionLabel.text = NSLocalizedString("Special Ticket", comment: "")
         }
         UIView.animate(withDuration: 0.2, delay: 0, options:[.repeat, .autoreverse], animations: {
-            self.attentionView.backgroundColor = UIColor.yellow //FIXME: scanResultAttention
-            self.attentionView.backgroundColor = UIColor.orange //FIXME: scanResultAttentionAlternate
+            self.attentionView.backgroundColor = UIColor.scanResultAttention
+            self.attentionView.backgroundColor = UIColor.scanResultAttentionAlternate
         }, completion:nil )
     }
     

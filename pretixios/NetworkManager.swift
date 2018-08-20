@@ -188,12 +188,12 @@ class NetworkManager : NSObject, URLSessionDelegate {
                 if (status == 200 || status == 201 || status == 400), let data = data { // FIXME: document why 400 might be ok
                     do {
                         let response = try self.decoder.decode(PretixRedeemResponse.self, from: data)
+                        order.synced = 1
+                        SyncManager.sharedInstance.save()
                         completion(response, nil)
                     } catch let jsonerror {
                         completion(nil, jsonerror)
                     }
-                    order.synced = 1
-                    SyncManager.sharedInstance.save()
                 } else {
                     print("Error: \(status) \(#file):\(#line) Url: \(request.url!)")
                     completion(nil, HttpError(code: status))

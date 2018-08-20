@@ -49,7 +49,7 @@
 "Reset Configuration" = "Reset Configuration";
 "%d Checkin not synced. Pull to retry." = "%d Checkin not synced. Pull to retry.";
 "%d Checkins not synced. Pull to retry." = "%d Checkins not synced. Pull to retry.";
-"This list is empty. Maybe you need to configure the app first using the scanner or pull down to refresh." = "This list is empty. Maybe you need to configure the app first using the scanner or pull down to refresh.";
+"This list is empty.\nMaybe you need to configure the app first using the scanner or pull down to refresh." = "This list is empty.\nMaybe you need to configure the app first using the scanner or pull down to refresh.";
 "Attendees\n" = "Attendees\n";
 "No camera access" = "No camera access";
 "Please allow camera access in the app settings." = "Please allow camera access in the app settings.";
@@ -66,3 +66,4 @@
 "Delete configuration & data" = "Delete configuration & data";
 "Delete" = "Delete";
 "Cancel" = "Cancel";
+"No configuration" = "No configuration";

@@ -49,7 +49,7 @@
 "Reset Configuration" = "Konfiguration zurücksetzen";
 "%d Checkin not synced. Pull to retry." = "%d Checkin nicht synchronisiert. Ziehen zum wiederholen.";
 "%d Checkins not synced. Pull to retry." = "%d Checkins nicht synchronisiert. Ziehen zum wiederholen.";
-"This list is empty. Maybe you need to configure the app first using the scanner or pull down to refresh." = "This list is empty. Maybe you need to configure the app first using the scanner or pull down to refresh.";
+"This list is empty.\nMaybe you need to configure the app first using the scanner or pull down to refresh." = "Die Liste ist leer.\nVielleicht musst du noch einen Konfigurations-Code scannen oder ziehen zum neu laden.";
 "Attendees\n" = "Teilnehmer\n";
 "No camera access" = "Kein Zugriff auf die Kamera";
 "Please allow camera access in the app settings." = "Bitte erlaube den Kamerazugriff in den Einstellungen der App";
@@ -66,3 +66,4 @@
 "Delete configuration & data" = "Konfiguration & Daten löschen";
 "Delete" = "Löschen";
 "Cancel" = "Abbrechen";
+"No configuration" = "Nicht konfiguriert";

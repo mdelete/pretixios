@@ -77,10 +77,6 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
     private func setTitleWithGuests() {
         let string = NSMutableAttributedString()
         string.append(NSMutableAttributedString(string: NSLocalizedString("Attendees\n", comment: ""), attributes: [NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Bold", size: 18.0)!]))
@@ -107,11 +103,11 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
     private func setTableViewPlaceholder(isEmpty: Bool) {
         if isEmpty {
             let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: self.view.bounds.size.height))
-            messageLabel.text = NSLocalizedString("This list is empty. Maybe you need to configure the app first using the scanner or pull down to refresh.", comment: "");
-            messageLabel.textColor = UIColor.black;
+            messageLabel.text = NSLocalizedString("This list is empty.\nMaybe you need to configure the app first using the scanner or pull down to refresh.", comment: "")
+            messageLabel.textColor = UIColor.black
             messageLabel.numberOfLines = 0;
             messageLabel.textAlignment = NSTextAlignment.center;
-            messageLabel.font = UIFont(name: "Palatino-Italic", size: 20)
+            messageLabel.font = UIFont(name: "HelveticaNeue-Thin", size: 20)
             messageLabel.sizeToFit()
             self.tableView.backgroundView = messageLabel;
             self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none

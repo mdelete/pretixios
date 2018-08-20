@@ -16,17 +16,12 @@ protocol QrScanResultProtocolDelegate: AnyObject {
 
 class AttentionView : UIView {
     
-    let attentionIcon = UIImageView()
     let attentionLabel = UILabel()
     
     init() {
         super.init(frame: .zero)
         self.translatesAutoresizingMaskIntoConstraints = false
         
-        attentionIcon.translatesAutoresizingMaskIntoConstraints = false
-        attentionIcon.backgroundColor = .red
-        
-        attentionLabel.text = NSLocalizedString("Special Ticket!", comment: "")
         attentionLabel.numberOfLines = 0
         attentionLabel.textAlignment = .center
         attentionLabel.font = .preferredFont(forTextStyle: .headline)
@@ -34,7 +29,6 @@ class AttentionView : UIView {
         attentionLabel.textColor = .pretixWhiteColor
         attentionLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addSubview(attentionIcon)
         self.addSubview(attentionLabel)
     }
     
@@ -46,9 +40,10 @@ class AttentionView : UIView {
         super.layoutSubviews()
         
         NSLayoutConstraint.activate([
-            attentionLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            attentionLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor)
-            // icon fixed w,h
+            attentionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            attentionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            attentionLabel.topAnchor.constraint(equalTo: self.topAnchor),
+            attentionLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
 }
@@ -256,7 +251,7 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     
     let laserView = UIView()
     let infoView = InfoView()
-    let attentionView = UIView()
+    let attentionView = AttentionView()
     let scannerView = UIView()
     var previewLayer : AVCaptureVideoPreviewLayer?
 
@@ -433,8 +428,13 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         self.present(alert, animated: true, completion: nil)
     }
     
-    private func showAttentionView() {
+    private func showAttentionView(comment: String? = nil) {
         self.attentionView.isHidden = false
+        if let comment = comment {
+             self.attentionView.attentionLabel.text = comment
+        } else {
+            self.attentionView.attentionLabel.text = NSLocalizedString("Special Ticket", comment: "")
+        }
         UIView.animate(withDuration: 0.2, delay: 0, options:[.repeat, .autoreverse], animations: {
             self.attentionView.backgroundColor = UIColor.yellow //FIXME: scanResultAttention
             self.attentionView.backgroundColor = UIColor.orange //FIXME: scanResultAttentionAlternate
@@ -529,6 +529,7 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         DispatchQueue.main.asyncAfter(deadline: delay) {
             if UserDefaults.standard.bool(forKey: "app_configured") == true {
                 self.infoView.resetInfoView()
+                self.hideAttentionView()
             } else {
                 self.infoView.resetConfigurationView()
             }
@@ -561,12 +562,22 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                             if let order = orders.first {
                                 if let _ = order.checkin {
                                     self.infoView.setInfoView(order: order, result: PretixRedeemResponse(status: .ok, reason: .already_redeemed))
+                                    if order.checkin_attention {
+                                        OperationQueue.main.addOperation {
+                                            self.showAttentionView(comment: order.comment)
+                                        }
+                                    }
                                 } else {
                                     order.checkin = Date()
                                     order.synced = -1
                                     SyncManager.sharedInstance.save()
                                     NetworkManager.sharedInstance.postPretixRedeem(order: order) { (response, error) in
                                         self.infoView.setInfoView(order: order, result: response)
+                                        if order.checkin_attention {
+                                            OperationQueue.main.addOperation {
+                                                self.showAttentionView(comment: order.comment)
+                                            }
+                                        }
                                     }
                                 }
                             } else {
@@ -587,6 +598,7 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                             UserDefaults.standard.setValue(config.apiurl, forKey: "pretix_api_base")
                             UserDefaults.standard.synchronize()
                             
+                            NetworkManager.sharedInstance.getPretixItems()
                             NetworkManager.sharedInstance.getPretixCheckinlist()
                             NetworkManager.sharedInstance.getPretixOrders()
                             

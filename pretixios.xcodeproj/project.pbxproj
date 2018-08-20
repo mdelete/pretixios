@@ -19,6 +19,8 @@
 		940A83912101B05F00EA3873 /* CheckinListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A83902101B05F00EA3873 /* CheckinListTableViewController.swift */; };
 		940A83932101B39300EA3873 /* PrintTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A83922101B39300EA3873 /* PrintTableViewController.swift */; };
 		940C4E0B209E592D00FF723F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 940C4E0A209E592D00FF723F /* LaunchScreen.storyboard */; };
+		9459E535212B1338009211FF /* Item+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459E533212B1338009211FF /* Item+CoreDataClass.swift */; };
+		9459E536212B1338009211FF /* Item+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459E534212B1338009211FF /* Item+CoreDataProperties.swift */; };
 		9461DB132118B32900BA7972 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9461DB122118B32900BA7972 /* SwitchTableViewCell.swift */; };
 		94B168A220C97C67002C9C2E /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B168A120C97C67002C9C2E /* BLEManager.swift */; };
 		94D3E61A2098B04B00FB2894 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3E6192098B04B00FB2894 /* AppDelegate.swift */; };
@@ -58,6 +60,8 @@
 		940A83902101B05F00EA3873 /* CheckinListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckinListTableViewController.swift; sourceTree = "<group>"; };
 		940A83922101B39300EA3873 /* PrintTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintTableViewController.swift; sourceTree = "<group>"; };
 		940C4E0A209E592D00FF723F /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9459E533212B1338009211FF /* Item+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataClass.swift"; sourceTree = "<group>"; };
+		9459E534212B1338009211FF /* Item+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		9461DB122118B32900BA7972 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		94B168A120C97C67002C9C2E /* BLEManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
 		94B168A420CA17C5002C9C2E /* pretixios.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = pretixios.entitlements; sourceTree = "<group>"; };
@@ -175,6 +179,8 @@
 				940A83812100B86E00EA3873 /* Voucher+CoreDataProperties.swift */,
 				940A83822100B86E00EA3873 /* Order+CoreDataClass.swift */,
 				940A83832100B86E00EA3873 /* Order+CoreDataProperties.swift */,
+				9459E533212B1338009211FF /* Item+CoreDataClass.swift */,
+				9459E534212B1338009211FF /* Item+CoreDataProperties.swift */,
 				940A838C2101154C00EA3873 /* Checkinlist+CoreDataClass.swift */,
 				940A838D2101154C00EA3873 /* Checkinlist+CoreDataProperties.swift */,
 				94D3E6382098B2E600FB2894 /* NSManagedObject+FirstLetter.swift */,
@@ -285,8 +291,10 @@
 				94D3E64A2098B30500FB2894 /* SyncManager.swift in Sources */,
 				94D3E6472098B30500FB2894 /* TabBarController.swift in Sources */,
 				94D3E6492098B30500FB2894 /* NetworkManager.swift in Sources */,
+				9459E535212B1338009211FF /* Item+CoreDataClass.swift in Sources */,
 				940A838B2100E95B00EA3873 /* ListTableViewController.swift in Sources */,
 				94D3E6342098B2DA00FB2894 /* DetailTableViewController.swift in Sources */,
+				9459E536212B1338009211FF /* Item+CoreDataProperties.swift in Sources */,
 				94EDC145209A67DC005A30EF /* StatusTableViewController.swift in Sources */,
 				940A83852100B86E00EA3873 /* Syncstate+CoreDataProperties.swift in Sources */,
 				940A83892100B86E00EA3873 /* Order+CoreDataProperties.swift in Sources */,

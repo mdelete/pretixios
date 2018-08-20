@@ -84,6 +84,7 @@ struct PretixOrderResponse : Codable {
         
         let code : String
         let checkin_attention : Bool
+        let comment : String?
         let status : Result.Status
         let datetime : Date?
         let invoice_address : Result.Address?
@@ -141,4 +142,18 @@ struct PretixVoucherResponse : Codable {
     let next : String?
     let results : [Result]
 }
+
+struct PretixItemResponse : Codable {
+    
+    struct Result : Codable {
+        let id : Int
+        let name : [String:String]?
+    }
+    
+    let count : Int
+    let next : String?
+    let results : [Result]
+}
+
+
 

@@ -466,6 +466,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                         results.first?.pseudonymization_id = position.pseudonymization_id
                                         results.first?.datetime = result.datetime
                                         results.first?.checkin_attention = result.checkin_attention
+                                        results.first?.comment = result.comment
                                         print("Remote update \(guid)")
                                     } else if (results.count == 0) {
                                         let order = Order(context: context)
@@ -483,6 +484,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                         order.pseudonymization_id = position.pseudonymization_id
                                         order.datetime = result.datetime
                                         order.checkin_attention = result.checkin_attention
+                                        order.comment = result.comment
                                         print("Remote new \(guid)")
                                     } else {
                                         print("HORROR! \(results.count)")
@@ -495,6 +497,105 @@ class NetworkManager : NSObject, URLSessionDelegate {
                         
                         syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
                         self.getPretixOrders(path: response.next, progress: response.results.count, status: status)
+                        
+                    } catch let error {
+                        print(error)
+                        syncManager.failure(syncPath, code: -2)
+                    }
+                } else if status == 401 {
+                    syncManager.failure(syncPath, code: status)
+                } else if status == 304 {
+                    syncManager.success(syncPath, code: status)
+                } else {
+                    syncManager.failure(syncPath, code: status)
+                }
+            } else {
+                print("\(error!.localizedDescription)")
+                syncManager.failure(syncPath, code: -1)
+            }
+        })
+        dataTask.resume()
+    }
+    
+    func getPretixItems() {
+        if let base = UserDefaults.standard.string(forKey: "pretix_api_base") {
+            NetworkManager.sharedInstance.getPretixItems(path: base + "/orders/", progress: 0, status: 0)
+        } else {
+            SyncManager.sharedInstance.failure("getPretixItems", code: -1)
+        }
+    }
+    
+    func getPretixItems(path: String?, progress: Int, status: Int) {
+        
+        let syncManager = SyncManager.sharedInstance
+        let syncPath = "getPretixItems"
+        
+        guard let path = path, var url = URL(string: path) else {
+            if status == 200 {
+                syncManager.success(syncPath, code: status)
+                print("last chunk success")
+            } else {
+                syncManager.failure(syncPath, code: status)
+            }
+            return
+        }
+        
+        guard let token = KeychainService.loadPassword(key: "pretix_api_token") else {
+            print("pretix_api_token not configured")
+            syncManager.failure(syncPath, code: -1)
+            return
+        }
+        
+        guard let context = syncManager.backgroundContext else {
+            print("No Background context")
+            return
+        }
+        
+        if let modified = SyncManager.sharedInstance.lastSync(syncPath) {
+            print("Last sync \(modified.rfc1123String())")
+            if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+                urlComponents.queryItems = [URLQueryItem(name: "modified_since", value: modified.iso8601String())]
+                url = urlComponents.url!
+                print(url)
+            }
+        }
+        
+        var request = URLRequest(url: url)
+        request.setValue("Token " + token, forHTTPHeaderField: "Authorization")
+        
+        let dataTask = session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
+            if error == nil {
+                let status = (response as! HTTPURLResponse).statusCode
+                if status == 200, let data = data {
+                    do {
+                        let response = try self.decoder.decode(PretixItemResponse.self, from: data)
+                        let fetchRequest: NSFetchRequest<Item> = Item.fetchRequest()
+                        
+                        for result in response.results {
+                            
+                            fetchRequest.predicate = NSPredicate(format: "id == %@", result.id)
+                            
+                            do {
+                                let results = try context.fetch(fetchRequest)
+                                if results.count == 1 {
+                                    results.first?.id = Int32(result.id)
+                                    results.first?.name = result.name
+                                    print("Remote update \(result.id)")
+                                } else if (results.count == 0) {
+                                    let item = Item(context: context)
+                                    item.id = Int32(result.id)
+                                    item.name = result.name
+                                    print("Remote new \(result.id)")
+                                } else {
+                                    print("HORROR! \(results.count)")
+                                }
+                            } catch {
+                                print("Fetch error: \(error.localizedDescription)")
+                            }
+                        }
+                        
+                        syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
+                        self.getPretixItems(path: response.next, progress: response.results.count, status: status)
                         
                     } catch let error {
                         print(error)

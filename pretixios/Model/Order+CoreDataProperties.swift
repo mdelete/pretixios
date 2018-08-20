@@ -26,6 +26,7 @@ extension Order {
     @NSManaged public var attendee_name: String?
     @NSManaged public var checkin: Date?
     @NSManaged public var checkin_attention: Bool
+    @NSManaged public var comment: String?
     @NSManaged public var company: String?
     @NSManaged public var datetime: Date?
     @NSManaged public var pseudonymization_id: String

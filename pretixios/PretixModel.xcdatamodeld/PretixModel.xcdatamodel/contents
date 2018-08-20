@@ -6,12 +6,18 @@
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="position_count" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
+    <entity name="Item" representedClassName=".Item" syncable="YES">
+        <attribute name="color" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" attributeType="Integer 32" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="Transformable" syncable="YES"/>
+    </entity>
     <entity name="Order" representedClassName=".Order" syncable="YES">
         <attribute name="attendee_email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="attendee_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="checkin" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="checkin_attention" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="checkin_list" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="comment" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="company" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="datetime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="guid" attributeType="String" syncable="YES"/>
@@ -53,8 +59,9 @@
     </entity>
     <elements>
         <element name="Checkinlist" positionX="-27" positionY="144" width="128" height="105"/>
-        <element name="Order" positionX="-63" positionY="-18" width="128" height="315"/>
+        <element name="Order" positionX="-63" positionY="-18" width="128" height="330"/>
         <element name="Syncstate" positionX="-36" positionY="9" width="128" height="105"/>
         <element name="Voucher" positionX="-18" positionY="108" width="128" height="300"/>
+        <element name="Item" positionX="-36" positionY="135" width="128" height="90"/>
     </elements>
 </model>

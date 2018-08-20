@@ -136,7 +136,7 @@ class InfoView: UIView {
                 
                 self.nameLabel.text = order.attendee_name
                 self.orderCodeLabel.text = order.order
-                self.ticketTypeLabel.text = "\(order.item)"
+                self.ticketTypeLabel.text = order.item_name ?? "\(order.item)"
                 self.printButton.isHidden = true // FIXME: enable when printing is implemented
                 self.resultLabel.text = NSLocalizedString("Already redeemed", comment: "")
                 
@@ -153,7 +153,7 @@ class InfoView: UIView {
                 
                 self.nameLabel.text = order.attendee_name
                 self.orderCodeLabel.text = order.order
-                self.ticketTypeLabel.text = "\(order.item)"
+                self.ticketTypeLabel.text = order.item_name ?? "\(order.item)"
                 self.printButton.isHidden = true // FIXME: enable when printing is implemented
                 self.resultLabel.text = NSLocalizedString("Valid Ticket", comment: "")
                 
@@ -544,7 +544,7 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             if let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject, readableObject.type == .qr {
                 if let qrstring = readableObject.stringValue {
                     
-                    stopRunning()
+                    self.captureSession.stopRunning()
                     
                     if UIDevice.current.userInterfaceIdiom == .phone {
                         AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
@@ -555,11 +555,16 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                     print("QR: \(qrstring)")
                     
                     if UserDefaults.standard.bool(forKey: "app_configured") == true {
-                        let fetchRequest: NSFetchRequest<Order> = Order.fetchRequest()
-                        fetchRequest.predicate = NSPredicate(format: "secret == %@", qrstring)
+                        let fetchOrder: NSFetchRequest<Order> = Order.fetchRequest()
+                        fetchOrder.predicate = NSPredicate(format: "secret == %@", qrstring)
                         do {
-                            let orders = try SyncManager.sharedInstance.viewContext.fetch(fetchRequest)
+                            let orders = try SyncManager.sharedInstance.viewContext.fetch(fetchOrder)
                             if let order = orders.first {
+                                
+                                let fetchItem: NSFetchRequest<Item> = Item.fetchRequest()
+                                fetchItem.predicate = NSPredicate(format: "id == %d", order.item)
+                                order.item_name = try SyncManager.sharedInstance.viewContext.fetch(fetchItem).first?.name
+                                
                                 if let _ = order.checkin {
                                     self.infoView.setInfoView(order: order, result: PretixRedeemResponse(status: .ok, reason: .already_redeemed))
                                     if order.checkin_attention {

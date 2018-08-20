@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DetailTableViewController: UITableViewController, ButtonCellDelegate, UISplitViewControllerDelegate {
 
@@ -117,10 +118,17 @@ class DetailTableViewController: UITableViewController, ButtonCellDelegate, UISp
             cell.accessoryType = .none
             cell.selectionStyle = .none
             if let order = order {
+                
+                let fetchItem: NSFetchRequest<Item> = Item.fetchRequest()
+                fetchItem.predicate = NSPredicate(format: "id == %d", order.item)
+                if let item = try? SyncManager.sharedInstance.viewContext.fetch(fetchItem) {
+                    order.item_name = item.first?.name
+                }
+                
                 if let variation = order.variation {
-                     cell.valueLabel.text = "\(order.item) - \(variation)"
+                     cell.valueLabel.text = order.item_name ?? "\(order.item)" + " - \(variation)"
                 } else {
-                    cell.valueLabel.text = String(format: NSLocalizedString("%d - Standard", comment: ""), order.item)
+                    cell.valueLabel.text = order.item_name ?? "\(order.item)"
                 }
             }
             return cell

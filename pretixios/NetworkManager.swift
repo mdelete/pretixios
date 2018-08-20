@@ -40,7 +40,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
                 optionalDate = formatter.date(from: dateString)
             default:
                 let formatter = ISO8601DateFormatter()
-                // since iOS11 ISO8601DateFormatter can do fractional seconds but it seems to be broken
+                // FIXME: since iOS11 ISO8601DateFormatter can do fractional seconds but it seems to be broken
                 // formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
                 optionalDate = formatter.date(from: dateString)
             }
@@ -260,14 +260,14 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                     results.first?.name = result.name
                                     results.first?.checkin_count = Int32(result.checkin_count)
                                     results.first?.position_count = Int32(result.position_count)
-                                    print("Remote update \(result.id)")
+                                    print("Remote update checkinlist \(result.id)")
                                 } else if (results.count == 0) {
                                     let checkinlist = Checkinlist(context: context)
                                     checkinlist.id = Int32(result.id)
                                     checkinlist.name = result.name
                                     checkinlist.checkin_count = Int32(result.checkin_count)
                                     checkinlist.position_count = Int32(result.position_count)
-                                    print("Remote new \(result.id)")
+                                    print("Remote new checkinlist \(result.id)")
                                 } else {
                                     print("HORROR! \(results.count)")
                                 }
@@ -350,12 +350,12 @@ class NetworkManager : NSObject, URLSessionDelegate {
                             do {
                                 let results = try context.fetch(fetchRequest)
                                 if results.count == 1 {
-                                    print("Remote update \(result.id)")
+                                    print("Remote update voucher \(result.id)")
                                 } else if (results.count == 0) {
                                     let voucher = Voucher(context: context)
                                     voucher.id = Int32(result.id)
                                     // FIXME: implement
-                                    print("Remote new \(result.id)")
+                                    print("Remote new voucher \(result.id)")
                                 } else {
                                     print("HORROR! \(results.count)")
                                 }
@@ -440,7 +440,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
                 if status == 200, let data = data {
                     do {
                         let response = try self.decoder.decode(PretixOrderResponse.self, from: data)
-                        let fetchRequest: NSFetchRequest<Order> = Order.fetchRequest()
+                        let fetchOrder: NSFetchRequest<Order> = Order.fetchRequest()
                         
                         for result in response.results {
                             for position in result.positions {
@@ -448,10 +448,10 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                 let checkin = position.checkins.last?.datetime
                                 let guid = "\(result.code)-\(position.id)"
                                 
-                                fetchRequest.predicate = NSPredicate(format: "guid == %@", guid)
+                                fetchOrder.predicate = NSPredicate(format: "guid == %@", guid)
                                 
                                 do {
-                                    let results = try context.fetch(fetchRequest)
+                                    let results = try context.fetch(fetchOrder)
                                     if results.count == 1 {
                                         results.first?.order = position.order
                                         results.first?.attendee_name = position.attendee_name
@@ -467,7 +467,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                         results.first?.datetime = result.datetime
                                         results.first?.checkin_attention = result.checkin_attention
                                         results.first?.comment = result.comment
-                                        print("Remote update \(guid)")
+                                        print("Remote update order \(guid)")
                                     } else if (results.count == 0) {
                                         let order = Order(context: context)
                                         order.guid = guid
@@ -485,7 +485,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
                                         order.datetime = result.datetime
                                         order.checkin_attention = result.checkin_attention
                                         order.comment = result.comment
-                                        print("Remote new \(guid)")
+                                        print("Remote new order \(guid)")
                                     } else {
                                         print("HORROR! \(results.count)")
                                     }
@@ -519,7 +519,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
     
     func getPretixItems() {
         if let base = UserDefaults.standard.string(forKey: "pretix_api_base") {
-            NetworkManager.sharedInstance.getPretixItems(path: base + "/orders/", progress: 0, status: 0)
+            NetworkManager.sharedInstance.getPretixItems(path: base + "/items/", progress: 0, status: 0)
         } else {
             SyncManager.sharedInstance.failure("getPretixItems", code: -1)
         }
@@ -567,25 +567,34 @@ class NetworkManager : NSObject, URLSessionDelegate {
             if error == nil {
                 let status = (response as! HTTPURLResponse).statusCode
                 if status == 200, let data = data {
+                    
                     do {
                         let response = try self.decoder.decode(PretixItemResponse.self, from: data)
-                        let fetchRequest: NSFetchRequest<Item> = Item.fetchRequest()
+                        let fetchItem: NSFetchRequest<Item> = Item.fetchRequest()
                         
                         for result in response.results {
                             
-                            fetchRequest.predicate = NSPredicate(format: "id == %@", result.id)
+                            fetchItem.predicate = NSPredicate(format: "id == %d", result.id)
                             
                             do {
-                                let results = try context.fetch(fetchRequest)
+                                let results = try context.fetch(fetchItem)
                                 if results.count == 1 {
                                     results.first?.id = Int32(result.id)
-                                    results.first?.name = result.name
-                                    print("Remote update \(result.id)")
+                                    if let name = result.internal_name {
+                                        results.first?.name = name
+                                    } else {
+                                        results.first?.name = result.name?.first?.value
+                                    }
+                                    print("Remote update item \(result.id)")
                                 } else if (results.count == 0) {
                                     let item = Item(context: context)
                                     item.id = Int32(result.id)
-                                    item.name = result.name
-                                    print("Remote new \(result.id)")
+                                    if let name = result.internal_name {
+                                        item.name = name
+                                    } else {
+                                        item.name = result.name?.first?.value
+                                    }
+                                    print("Remote new item \(result.id)")
                                 } else {
                                     print("HORROR! \(results.count)")
                                 }

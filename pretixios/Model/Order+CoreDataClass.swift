@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-
 public class Order: NSManagedObject {
 
+    public var item_name: String?
 }

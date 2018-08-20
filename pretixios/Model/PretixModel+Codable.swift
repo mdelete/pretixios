@@ -148,6 +148,7 @@ struct PretixItemResponse : Codable {
     struct Result : Codable {
         let id : Int
         let name : [String:String]?
+        let internal_name : String?
     }
     
     let count : Int

@@ -10,7 +10,6 @@
 import Foundation
 import CoreData
 
-
 extension Item {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Item> {
@@ -18,6 +17,6 @@ extension Item {
     }
 
     @NSManaged public var id: Int32
-    @NSManaged public var name: [String:String]?
+    @NSManaged public var name: String?
 
 }

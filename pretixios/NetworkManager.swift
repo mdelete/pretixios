@@ -422,7 +422,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
             return
         }
         
-        if let modified = SyncManager.sharedInstance.lastSync(syncPath) {
+        if let modified = SyncManager.sharedInstance.lastSync(syncPath), progress == 0 {
             print("Last sync \(modified.rfc1123String())")
             if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) {
                 urlComponents.queryItems = [URLQueryItem(name: "modified_since", value: modified.iso8601String())]

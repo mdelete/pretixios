@@ -21,7 +21,8 @@ class CICode39 : CIFilter
     }
     
     override var outputImage: CIImage? {
-        if var data = inputMessage { // self.value(forKey: "inputMessage") as? Data {
+        print("CICode39.outputImage")
+        if var data = inputMessage {
             var checksum = 0
             data.forEach { (byte) in
                 if let i = cp.index(of: byte) {

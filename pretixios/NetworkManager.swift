@@ -18,6 +18,8 @@ class NetworkManager : NSObject, URLSessionDelegate {
     fileprivate let operationQueue = OperationQueue()
     fileprivate let sessionConfiguration = URLSessionConfiguration.default
     
+    fileprivate let syncManager = SyncManager.sharedInstance
+    
     fileprivate let encoder : JSONEncoder = {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
@@ -206,26 +208,25 @@ class NetworkManager : NSObject, URLSessionDelegate {
         dataTask.resume()
     }
     
+    fileprivate let checkinlistsPath = "/checkinlists/"
+    
     func getPretixCheckinlist() {
         if let base = UserDefaults.standard.string(forKey: "pretix_api_base") {
-            NetworkManager.sharedInstance.getPretixCheckinlist(path: base + "/checkinlists/", progress: 0, status: 0)
+            NetworkManager.sharedInstance.getPretixCheckinlist(path: base + checkinlistsPath, progress: 0, status: 0)
         } else {
-            SyncManager.sharedInstance.failure("getPretixCheckinlist", code: -1)
+            SyncManager.sharedInstance.failure(checkinlistsPath, code: -1)
         }
     }
     
-    func getPretixCheckinlist(path: String?, progress: Int, status: Int) {
-        
-        let syncManager = SyncManager.sharedInstance
-        let syncPath = "getPretixCheckinlist"
+    fileprivate func getPretixCheckinlist(path: String?, progress: Int, status: Int) {
         
         guard let path = path, let url = URL(string: path) else {
             if status == 200 {
-                syncManager.success(syncPath, code: status)
+                syncManager.success(checkinlistsPath, code: status)
                 syncManager.checkDefaultCheckinList()
                 print("last chunk success")
             } else {
-                syncManager.failure(syncPath, code: status)
+                syncManager.failure(checkinlistsPath, code: status)
             }
             return
         }
@@ -277,48 +278,44 @@ class NetworkManager : NSObject, URLSessionDelegate {
                             
                         }
                         
-                        syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
+                        self.syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
                         self.getPretixCheckinlist(path: response.next, progress: response.results.count, status: status)
                         
                     } catch let error {
                         print(error)
-                        syncManager.failure(syncPath, code: -2)
+                        self.syncManager.failure(self.checkinlistsPath, code: -2)
                     }
-                } else if status == 401 {
-                    print("\(error!.localizedDescription)")
-                    syncManager.failure(syncPath, code: status)
                 } else if status == 304 {
-                    syncManager.success(syncPath, code: status)
+                    self.syncManager.success(self.checkinlistsPath, code: status)
                 } else {
-                    syncManager.failure(syncPath, code: status)
+                    self.syncManager.failure(self.checkinlistsPath, code: status)
                 }
             } else {
                 print("\(error!.localizedDescription)")
-                syncManager.failure(syncPath, code: -1)
+                self.syncManager.failure(self.checkinlistsPath, code: -1)
             }
         })
         dataTask.resume()
     }
     
+    fileprivate let vouchersPath = "/vouchers/"
+    
     func getPretixVouchers() {
         if let base = UserDefaults.standard.string(forKey: "pretix_api_base") {
-            NetworkManager.sharedInstance.getPretixVouchers(path: base + "/vouchers/", progress: 0, status: 0)
+            NetworkManager.sharedInstance.getPretixVouchers(path: base + vouchersPath, progress: 0, status: 0)
         } else {
-            SyncManager.sharedInstance.failure("getPretixVoucher", code: -1)
+            SyncManager.sharedInstance.failure(vouchersPath, code: -1)
         }
     }
     
-    func getPretixVouchers(path: String?, progress: Int, status: Int) {
-        
-        let syncManager = SyncManager.sharedInstance
-        let syncPath = "getPretixVoucher"
+    fileprivate func getPretixVouchers(path: String?, progress: Int, status: Int) {
         
         guard let path = path, let url = URL(string: path) else {
             if status == 200 {
-                syncManager.success(syncPath, code: status)
+                syncManager.success(vouchersPath, code: status)
                 print("last chunk success")
             } else {
-                syncManager.failure(syncPath, code: status)
+                syncManager.failure(vouchersPath, code: status)
             }
             return
         }
@@ -365,70 +362,62 @@ class NetworkManager : NSObject, URLSessionDelegate {
 
                         }
                         
-                        syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
+                        self.syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
                         self.getPretixVouchers(path: response.next, progress: response.results.count, status: status)
                         
                     } catch let error {
                         print(error)
-                        syncManager.failure(syncPath, code: -2)
+                        self.syncManager.failure(self.vouchersPath, code: -2)
                     }
-                } else if status == 401 {
-                    print("\(error!.localizedDescription)")
-                    syncManager.failure(syncPath, code: status)
                 } else if status == 304 {
-                    syncManager.success(syncPath, code: status)
+                    self.syncManager.success(self.vouchersPath, code: status)
                 } else {
-                    syncManager.failure(syncPath, code: status)
+                    self.syncManager.failure(self.vouchersPath, code: status)
                 }
             } else {
                 print("\(error!.localizedDescription)")
-                syncManager.failure(syncPath, code: -1)
+                self.syncManager.failure(self.vouchersPath, code: -1)
             }
         })
         dataTask.resume()
     }
     
+    fileprivate let ordersPath = "/orders/"
+    
     func getPretixOrders() {
         if let base = UserDefaults.standard.string(forKey: "pretix_api_base") {
-            NetworkManager.sharedInstance.getPretixOrders(path: base + "/orders/", progress: 0, status: 0)
+            var query = ""
+            if let modified = syncManager.lastSync(ordersPath) {
+                print("Last sync \(modified.rfc1123String())")
+                query = "?modified_since=" + modified.iso8601String()
+            }
+            NetworkManager.sharedInstance.getPretixOrders(path: base + ordersPath + query, progress: 0, status: 0)
         } else {
             SyncManager.sharedInstance.failure("getPretixOrders", code: -1)
         }
     }
     
-    func getPretixOrders(path: String?, progress: Int, status: Int) {
+    fileprivate func getPretixOrders(path: String?, progress: Int, status: Int) {
         
-        let syncManager = SyncManager.sharedInstance
-        let syncPath = "getPretixOrders"
-        
-        guard let path = path, var url = URL(string: path) else {
+        guard let path = path, let url = URL(string: path) else {
             if status == 200 {
-                syncManager.success(syncPath, code: status)
+                syncManager.success(ordersPath, code: status)
                 print("last chunk success")
             } else {
-                syncManager.failure(syncPath, code: status)
+                syncManager.failure(ordersPath, code: status)
             }
             return
         }
         
         guard let token = KeychainService.loadPassword(key: "pretix_api_token") else {
             print("pretix_api_token not configured")
-            syncManager.failure(syncPath, code: -1)
+            syncManager.failure(ordersPath, code: -1)
             return
         }
         
         guard let context = syncManager.backgroundContext else {
             print("No Background context")
             return
-        }
-        
-        if let modified = SyncManager.sharedInstance.lastSync(syncPath), progress == 0 {
-            print("Last sync \(modified.rfc1123String())")
-            if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-                urlComponents.queryItems = [URLQueryItem(name: "modified_since", value: modified.iso8601String())]
-                url = urlComponents.url!
-                print(url)
-            }
         }
         
         var request = URLRequest(url: url)
@@ -495,69 +484,57 @@ class NetworkManager : NSObject, URLSessionDelegate {
                             }
                         }
                         
-                        syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
+                        self.syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
                         self.getPretixOrders(path: response.next, progress: response.results.count, status: status)
                         
                     } catch let error {
                         print(error)
-                        syncManager.failure(syncPath, code: -2)
+                        self.syncManager.failure(self.ordersPath, code: -2)
                     }
-                } else if status == 401 {
-                    syncManager.failure(syncPath, code: status)
                 } else if status == 304 {
-                    syncManager.success(syncPath, code: status)
+                    self.syncManager.success(self.ordersPath, code: status)
                 } else {
-                    syncManager.failure(syncPath, code: status)
+                    self.syncManager.failure(self.ordersPath, code: status)
                 }
             } else {
                 print("\(error!.localizedDescription)")
-                syncManager.failure(syncPath, code: -1)
+                self.syncManager.failure(self.ordersPath, code: -1)
             }
         })
         dataTask.resume()
     }
     
+    fileprivate let itemsPath = "/items/"
+    
     func getPretixItems() {
         if let base = UserDefaults.standard.string(forKey: "pretix_api_base") {
-            NetworkManager.sharedInstance.getPretixItems(path: base + "/items/", progress: 0, status: 0)
+            NetworkManager.sharedInstance.getPretixItems(path: base + itemsPath, progress: 0, status: 0)
         } else {
-            SyncManager.sharedInstance.failure("getPretixItems", code: -1)
+            SyncManager.sharedInstance.failure(itemsPath, code: -1)
         }
     }
     
-    func getPretixItems(path: String?, progress: Int, status: Int) {
+    fileprivate func getPretixItems(path: String?, progress: Int, status: Int) {
         
-        let syncManager = SyncManager.sharedInstance
-        let syncPath = "getPretixItems"
-        
-        guard let path = path, var url = URL(string: path) else {
+        guard let path = path, let url = URL(string: path) else {
             if status == 200 {
-                syncManager.success(syncPath, code: status)
+                syncManager.success(itemsPath, code: status)
                 print("last chunk success")
             } else {
-                syncManager.failure(syncPath, code: status)
+                syncManager.failure(itemsPath, code: status)
             }
             return
         }
         
         guard let token = KeychainService.loadPassword(key: "pretix_api_token") else {
             print("pretix_api_token not configured")
-            syncManager.failure(syncPath, code: -1)
+            syncManager.failure(itemsPath, code: -1)
             return
         }
         
         guard let context = syncManager.backgroundContext else {
             print("No Background context")
             return
-        }
-        
-        if let modified = SyncManager.sharedInstance.lastSync(syncPath) {
-            print("Last sync \(modified.rfc1123String())")
-            if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-                urlComponents.queryItems = [URLQueryItem(name: "modified_since", value: modified.iso8601String())]
-                url = urlComponents.url!
-                print(url)
-            }
         }
         
         var request = URLRequest(url: url)
@@ -603,23 +580,21 @@ class NetworkManager : NSObject, URLSessionDelegate {
                             }
                         }
                         
-                        syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
+                        self.syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
                         self.getPretixItems(path: response.next, progress: response.results.count, status: status)
                         
                     } catch let error {
                         print(error)
-                        syncManager.failure(syncPath, code: -2)
+                        self.syncManager.failure(self.itemsPath, code: -2)
                     }
-                } else if status == 401 {
-                    syncManager.failure(syncPath, code: status)
                 } else if status == 304 {
-                    syncManager.success(syncPath, code: status)
+                    self.syncManager.success(self.itemsPath, code: status)
                 } else {
-                    syncManager.failure(syncPath, code: status)
+                    self.syncManager.failure(self.itemsPath, code: status)
                 }
             } else {
                 print("\(error!.localizedDescription)")
-                syncManager.failure(syncPath, code: -1)
+                self.syncManager.failure(self.itemsPath, code: -1)
             }
         })
         dataTask.resume()

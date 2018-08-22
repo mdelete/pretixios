@@ -22,6 +22,8 @@
 	<string>5</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NFCReaderUsageDescription</key>
 	<string>This App uses NFC to scan ticket tags</string>
 	<key>NSCameraUsageDescription</key>

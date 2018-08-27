@@ -61,7 +61,7 @@ class ButtonTableViewCell: UITableViewCell {
             button.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
             button.heightAnchor.constraint(equalToConstant: 44.5),
             button.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            button.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            button.bottomAnchor.constraint(lessThanOrEqualTo: self.contentView.bottomAnchor),
             button.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.8)
         ])
         

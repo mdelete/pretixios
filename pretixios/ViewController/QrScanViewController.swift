@@ -403,17 +403,17 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     
     @objc private func startRunning() {
         if !captureSession.isRunning {
-            DispatchQueue.global(qos: .background).async {
+            //DispatchQueue.global(qos: .background).async {
                 self.captureSession.startRunning()
-            }
+            //}
         }
     }
 
     @objc private func stopRunning() {
         if captureSession.isRunning {
-            DispatchQueue.global(qos: .background).async {
+            //DispatchQueue.global(qos: .background).async {
                 self.captureSession.stopRunning()
-            }
+            //}
         }
     }
     

@@ -10,10 +10,11 @@ import Foundation
 import CoreBluetooth
 
 protocol BLEManagerDelegate: NSObjectProtocol {
+    func didStartScanning(_ manager: BLEManager)
     func didStopScanning(_ manager: BLEManager)
-    func didConnect(_ manager: BLEManager)
+    func didConnect(_ manager: BLEManager, peripheral: CBPeripheral)
     func didDisconnect(_ manager: BLEManager)
-    func didUpdate(_ manager: BLEManager, status: String?)
+    func didDiscover(_ manager: BLEManager, peripheral: CBPeripheral)
     func didReceive(_ manager: BLEManager, message: String?)
 }
 
@@ -34,32 +35,32 @@ class BLEManager: NSObject {
     weak var delegate : BLEManagerDelegate?
     
     fileprivate var centralManager: CBCentralManager!
-    fileprivate var discoveredPeripheral: CBPeripheral?
+    fileprivate var connectedPeripheral: CBPeripheral?
     fileprivate var uartTxCharacteristic: CBCharacteristic? {
         didSet {
-            if let _ = self.uartTxCharacteristic {
-                delegate?.didConnect(self)
+            if let _ = self.uartTxCharacteristic, let peripheral = connectedPeripheral {
+                delegate?.didConnect(self, peripheral: peripheral)
             }
         }
     }
     fileprivate var uartRxCharacteristic: CBCharacteristic? {
         didSet {
             if let characteristic = self.uartRxCharacteristic {
-                discoveredPeripheral?.setNotifyValue(true, for: characteristic)
+                connectedPeripheral?.setNotifyValue(true, for: characteristic)
             }
         }
     }
     fileprivate var baudCharacteristic: CBCharacteristic? {
         didSet {
             if let characteristic = self.baudCharacteristic {
-                discoveredPeripheral?.readValue(for: characteristic)
+                connectedPeripheral?.readValue(for: characteristic)
             }
         }
     }
     fileprivate var hwfcCharacteristic: CBCharacteristic? {
         didSet {
             if let characteristic = self.hwfcCharacteristic {
-                discoveredPeripheral?.readValue(for: characteristic)
+                connectedPeripheral?.readValue(for: characteristic)
             }
         }
     }
@@ -74,7 +75,7 @@ class BLEManager: NSObject {
         set {
             baud = newValue
             if let characteristic = self.baudCharacteristic {
-                discoveredPeripheral?.writeValue(baud.data, for: characteristic, type: .withResponse)
+                connectedPeripheral?.writeValue(baud.data, for: characteristic, type: .withResponse)
             }
         }
     }
@@ -84,7 +85,7 @@ class BLEManager: NSObject {
         set {
             hwfc = newValue
             if let characteristic = self.hwfcCharacteristic {
-                discoveredPeripheral?.writeValue(hwfc.data, for: characteristic, type: .withResponse)
+                connectedPeripheral?.writeValue(hwfc.data, for: characteristic, type: .withResponse)
             }
         }
     }
@@ -92,12 +93,19 @@ class BLEManager: NSObject {
     private override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
+        if let uuid = UserDefaults.standard.value(forKey: "last_printer_uuid") as? UUID {
+            let peripherals = centralManager.retrievePeripherals(withIdentifiers: [uuid])
+            if let peripheral = peripherals.first {
+                print("restored printer from user defaults")
+                centralManager.connect(peripheral, options: [:])
+            }
+        }
     }
     
     public func write(data: Data) {
         if let characteristic = uartTxCharacteristic {
             sendQueue = data.chunked(by: 20)
-            discoveredPeripheral?.writeValue(sendQueue.removeFirst(), for: characteristic, type: .withResponse)
+            connectedPeripheral?.writeValue(sendQueue.removeFirst(), for: characteristic, type: .withResponse)
         }
     }
     
@@ -111,17 +119,19 @@ class BLEManager: NSObject {
     }
     
     func killStopScanTimer() {
-        if stopScanTimer != nil {
-            stopScanTimer?.invalidate()
-            stopScanTimer = nil
-        }
+        stopScanTimer?.invalidate()
+        stopScanTimer = nil
     }
     
     func scan() {
         killStopScanTimer()
         centralManager.scanForPeripherals(withServices: [SerialServiceCBUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: NSNumber(value: true as Bool)])
         applyStopScanTimer()
-        delegate?.didUpdate(self, status: "Scanning...")
+        delegate?.didStartScanning(self)
+    }
+    
+    func connect(peripheral: CBPeripheral) {
+        centralManager.connect(peripheral, options: [:])
     }
     
     func cleanup() {
@@ -130,13 +140,13 @@ class BLEManager: NSObject {
         uartTxCharacteristic = nil
         sendQueue.removeAll()
         
-        guard let discoveredPeripheral = discoveredPeripheral else {
+        guard let connectedPeripheral = connectedPeripheral else {
             return
         }
         
-        guard discoveredPeripheral.state != .disconnected, let services = discoveredPeripheral.services else {
+        guard connectedPeripheral.state != .disconnected, let services = connectedPeripheral.services else {
             // FIXME: state connecting
-            centralManager.cancelPeripheralConnection(discoveredPeripheral)
+            centralManager.cancelPeripheralConnection(connectedPeripheral)
             return
         }
         
@@ -145,7 +155,7 @@ class BLEManager: NSObject {
                 for characteristic in characteristics {
                     if characteristic.uuid.isEqual(RxCharacteristicUUID) {
                         if characteristic.isNotifying {
-                            discoveredPeripheral.setNotifyValue(false, for: characteristic)
+                            connectedPeripheral.setNotifyValue(false, for: characteristic)
                             //return // ??? not cancelling if setNotify false succeeds ???
                         }
                     }
@@ -153,7 +163,7 @@ class BLEManager: NSObject {
             }
         }
         
-        centralManager.cancelPeripheralConnection(discoveredPeripheral)
+        centralManager.cancelPeripheralConnection(connectedPeripheral)
     }
 }
 
@@ -162,21 +172,16 @@ extension BLEManager: CBCentralManagerDelegate {
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
-        case .poweredOn: () //scan()
+        case .poweredOn: ()
         case .poweredOff, .resetting: cleanup()
         default: return
         }
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        
         //guard RSSI_range.contains(RSSI.intValue) && discoveredPeripheral != peripheral else { return }
         print("didDiscover \(peripheral) with RSSI \(RSSI.intValue)")
-        
-        discoveredPeripheral = peripheral
-        centralManager.connect(peripheral, options: [:])
-        
-        delegate?.didUpdate(self, status: "Discovered uart")
+        delegate?.didDiscover(self, peripheral: peripheral)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
@@ -185,19 +190,24 @@ extension BLEManager: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        connectedPeripheral = peripheral
         centralManager.stopScan()
+        delegate?.didStopScanning(self)
         receiveQueue.removeAll()
+        
+        UserDefaults.standard.set(peripheral.identifier, forKey: "last_printer_uuid")
+        UserDefaults.standard.synchronize()
+        print("stored to defaults")
+        
         peripheral.delegate = self
         peripheral.discoverServices([SerialServiceCBUUID])
-        delegate?.didUpdate(self, status: "Connected to " + (peripheral.name ?? "uart"))
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        if (peripheral == discoveredPeripheral) {
+        if (peripheral == connectedPeripheral) {
             cleanup()
             delegate?.didDisconnect(self)
         }
-        //scan()
     }
     
 }

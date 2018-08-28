@@ -29,12 +29,23 @@ class DetailTableViewController: UITableViewController, ButtonCellDelegate, UISp
         self.tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: "textInputCell")
         self.tableView.register(LabelTableViewCell.self, forCellReuseIdentifier: "labelCell")
         self.tableView.register(ButtonTableViewCell.self, forCellReuseIdentifier: "buttonCell")
+        
+        //self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(handlePrintTapped))
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         self.title = order?.attendee_name
+    }
+    
+    // MARK: - Actions
+    
+    @objc func handlePrintTapped() {
+        if let order = order, let name = order.attendee_name, let company = order.company {
+            let data = SLCSPrintFormatter.buildUartPrinterData(lines: [name, company], barcode: order.pseudonymization_id, speaker: order.checkin_attention)
+            BLEManager.sharedInstance.write(data: data)
+        }
     }
 
     // MARK: - Table view data source

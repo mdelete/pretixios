@@ -254,6 +254,8 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     let attentionView = AttentionView()
     let scannerView = UIView()
     var previewLayer : AVCaptureVideoPreviewLayer?
+    
+    var currentOrder : Order?
 
     weak var delegate: QrScanResultProtocolDelegate?
     
@@ -331,6 +333,8 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
             ])
         }
+        
+        infoView.printButton.addTarget(self, action: #selector(printBadge), for: .touchUpInside)
     }
     
     internal func updatePreviewLayer(layer: AVCaptureConnection, orientation: AVCaptureVideoOrientation) {
@@ -414,6 +418,13 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             //DispatchQueue.global(qos: .background).async {
                 self.captureSession.stopRunning()
             //}
+        }
+    }
+    
+    @objc private func printBadge() {
+        if let order = self.currentOrder, let name = order.attendee_name, let company = order.company {
+            let data = SLCSPrintFormatter.buildUartPrinterData(lines: [name, company], barcode: order.pseudonymization_id, speaker: order.checkin_attention)
+            BLEManager.sharedInstance.write(data: data)
         }
     }
     
@@ -530,6 +541,7 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             if UserDefaults.standard.bool(forKey: "app_configured") == true {
                 self.infoView.resetInfoView()
                 self.hideAttentionView()
+                self.currentOrder = nil
             } else {
                 self.infoView.resetConfigurationView()
             }
@@ -564,6 +576,8 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                                 let fetchItem: NSFetchRequest<Item> = Item.fetchRequest()
                                 fetchItem.predicate = NSPredicate(format: "id == %d", order.item)
                                 order.item_name = try SyncManager.sharedInstance.viewContext.fetch(fetchItem).first?.name
+                                
+                                self.currentOrder = order
                                 
                                 if let _ = order.checkin {
                                     self.infoView.setInfoView(order: order, result: PretixRedeemResponse(status: .ok, reason: .already_redeemed))

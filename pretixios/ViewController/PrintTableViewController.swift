@@ -8,8 +8,13 @@
 
 import UIKit
 import CoreData
+import CoreBluetooth
 
-class PrintTableViewController: UITableViewController, UIPrintInteractionControllerDelegate {
+class PrintTableViewController: UITableViewController, UIPrintInteractionControllerDelegate, BLEManagerDelegate {
+    
+    var selectedSetting : Int = 1
+    var selectedPeripheral : CBPeripheral?
+    var discoveredPeripherals = [CBPeripheral]()
     
     convenience init() {
         self.init(style: .grouped)
@@ -23,6 +28,7 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
                                                                  style: UIBarButtonItemStyle.done,
                                                                  target: self,
                                                                  action: #selector(printBadgeAirPrint))
+        BLEManager.sharedInstance.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -41,42 +47,149 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        if section == 0 {
+            return 4
+        } else {
+            return discoveredPeripherals.count
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        switch indexPath.row {
-        case 0:
-            cell.textLabel?.text = NSLocalizedString("None", comment: "")
-            cell.accessoryType = .none
-            cell.selectionStyle = .none
-            cell.textLabel?.textColor = UIColor.gray
-        case 1:
-            cell.textLabel?.text = NSLocalizedString("AirPrint", comment: "AirPrint is a brand name")
-            cell.accessoryType = .checkmark
-            cell.selectionStyle = .none
-        case 2:
-            cell.textLabel?.text = NSLocalizedString("MQTT", comment: "")
-            cell.accessoryType = .none
-            cell.selectionStyle = .none
-            cell.textLabel?.textColor = UIColor.gray
-        case 3:
-            cell.textLabel?.text = NSLocalizedString("Bluetooth Serial", comment: "")
-            cell.accessoryType = .none
-            cell.selectionStyle = .none
-            cell.textLabel?.textColor = UIColor.gray
-        default: ()
+        if indexPath.section == 0 {
+            switch indexPath.row {
+            case 0:
+                cell.textLabel?.text = NSLocalizedString("None", comment: "")
+                cell.textLabel?.textColor = UIColor.gray
+            case 1:
+                cell.textLabel?.text = NSLocalizedString("AirPrint", comment: "AirPrint is a brand name")
+            case 2:
+                cell.textLabel?.text = NSLocalizedString("MQTT", comment: "")
+                cell.textLabel?.textColor = UIColor.gray
+            case 3:
+                cell.textLabel?.text = NSLocalizedString("Bluetooth Serial", comment: "")
+                //cell.textLabel?.textColor = UIColor.gray
+            default: ()
+            }
+            if selectedSetting == indexPath.row {
+                cell.accessoryType = .checkmark
+                cell.selectionStyle = .none
+            } else {
+                cell.accessoryType = .none
+                cell.selectionStyle = .none
+            }
+            
+        } else {
+            let peripheral = discoveredPeripherals[indexPath.row]
+            cell.textLabel?.text = peripheral.name
+            
+            if peripheral.name == selectedPeripheral?.name {
+                cell.accessoryType = .checkmark
+                cell.selectionStyle = .none
+            } else {
+                cell.accessoryType = .none
+                cell.selectionStyle = .none
+            }
         }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            selectedSetting = indexPath.row
+            if indexPath.row == 3 {
+                BLEManager.sharedInstance.scan()
+            }
+        } else {
+            selectedPeripheral = discoveredPeripherals[indexPath.row]
+            if let peripheral = selectedPeripheral {
+                BLEManager.sharedInstance.connect(peripheral: peripheral)
+            }
+        }
+        self.tableView.reloadData()
+    }
+    
+    // MARK: - CoreData Helper
+    
+    func maxBadge() -> (String, String) {
+        var maxName = ""
+        var maxCompany = ""
         
+        let fetchRequest : NSFetchRequest<Order> = Order.fetchRequest()
+        
+        if let results = try? SyncManager.sharedInstance.backgroundContext.fetch(fetchRequest) {
+            results.forEach { (order) in
+                if let n = order.attendee_name, n.count > maxName.count {
+                    maxName = n
+                }
+                if let c = order.company, c.count > maxCompany.count {
+                    maxCompany = c
+                }
+            }
+        }
+        
+        return (maxName, maxCompany)
+    }
+    
+    // MARK: - BLEManagerDelegate
+    
+    func didStartScanning(_ manager: BLEManager) {
+        DispatchQueue.main.async {
+            let spinner = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+            spinner.startAnimating()
+            self.tableView.tableFooterView = spinner
+        }
+    }
+    
+    func didStopScanning(_ manager: BLEManager) {
+        DispatchQueue.main.async {
+            print("didStopScanning")
+            let spinner = self.tableView.tableFooterView as? UIActivityIndicatorView
+            spinner?.stopAnimating()
+            self.tableView.tableFooterView = nil
+        }
+    }
+    
+    func didDiscover(_ manager: BLEManager, peripheral: CBPeripheral) {
+        if let _ = discoveredPeripherals.index(of: peripheral) {
+            // nix
+        } else {
+            discoveredPeripherals.append(peripheral)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    func didConnect(_ manager: BLEManager, peripheral: CBPeripheral) {
+        DispatchQueue.main.async {
+            print("didConnect")
+            self.selectedPeripheral = peripheral
+            self.tableView.reloadData()
+        }
+    }
+    
+    func didDisconnect(_ manager: BLEManager) {
+        DispatchQueue.main.async {
+            self.selectedPeripheral = nil
+            self.tableView.reloadData()
+        }
+    }
+    
+    func didReceive(_ manager: BLEManager, message: String?) {
+        // nix
+    }
+    
+    // MARK: - BLE Print
+    
+    @objc func printBadgeBLE() {
+        let (maxName, maxCompany) = maxBadge()
+        let data = SLCSPrintFormatter.buildUartPrinterData(lines: [maxName, maxCompany], barcode: "DONOTTRACK", speaker: false)
+        BLEManager.sharedInstance.write(data: data)
     }
     
     // MARK: - AirPrint
@@ -98,27 +211,7 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
         }
     }
     
-    var maxName = ""
-    var maxCompany = ""
-    
     @objc func printBadgeAirPrint() {
-       
-        let fetchRequest : NSFetchRequest<Order> = Order.fetchRequest()
-        
-        if let results = try? SyncManager.sharedInstance.backgroundContext.fetch(fetchRequest) {
-            results.forEach { (order) in
-                if let n = order.attendee_name, n.count > maxName.count {
-                    maxName = n
-                }
-                if let c = order.company, c.count > maxCompany.count {
-                    maxCompany = c
-                }
-            }
-        } else {
-            print("Nothing found")
-        }
-        
-        
         let printerPicker = UIPrinterPickerController(initiallySelectedPrinter: nil)
         if UIUserInterfaceIdiom.pad == UIDevice.current.userInterfaceIdiom {
             printerPicker.present(from: self.navigationItem.rightBarButtonItem!, animated: true) { (picker, userDidSelect, error) in
@@ -148,7 +241,7 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
         
         printInfo.jobName = "Badge"
         printInfo.orientation = .landscape
-        printInfo.outputType = .general // .grayscale should be better for text only output
+        printInfo.outputType = .general
         
         pc.showsNumberOfCopies = false
         pc.printInfo = printInfo
@@ -156,6 +249,8 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
         
         let attributeName = [ NSAttributedStringKey.font: UIFont(name: "Helvetica-Bold", size: 24.0)! ]
         let attributeOther = [ NSAttributedStringKey.font: UIFont(name: "Helvetica", size: 20.0)! ]
+        
+        let (maxName, maxCompany) = maxBadge()
         
         let attributedStringName = NSMutableAttributedString(string: maxName, attributes: attributeName)
         let attributedStringCompany = NSAttributedString(string: "\n\n" + maxCompany, attributes: attributeOther)

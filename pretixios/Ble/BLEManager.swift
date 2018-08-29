@@ -20,12 +20,12 @@ protocol BLEManagerDelegate: NSObjectProtocol {
 
 class BLEManager: NSObject {
     
-    let SerialServiceCBUUID = CBUUID(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E")
-    let TxCharacteristicUUID = CBUUID(string: "6E400002-B5A3-F393-E0A9-E50E24DCCA9E")
-    let RxCharacteristicUUID = CBUUID(string: "6E400003-B5A3-F393-E0A9-E50E24DCCA9E")
-    let BaudCharacteristicUUID = CBUUID(string: "6E400004-B5A3-F393-E0A9-E50E24DCCA9E")
-    let HWFCCharacteristicUUID = CBUUID(string: "6E400005-B5A3-F393-E0A9-E50E24DCCA9E")
-    let NameCharacteristicUUID = CBUUID(string: "6E400006-B5A3-F393-E0A9-E50E24DCCA9E")
+    let SerialServiceCBUUID = CBUUID(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9F")
+    let TxCharacteristicUUID = CBUUID(string: "6E400002-B5A3-F393-E0A9-E50E24DCCA9F")
+    let RxCharacteristicUUID = CBUUID(string: "6E400003-B5A3-F393-E0A9-E50E24DCCA9F")
+    let BaudCharacteristicUUID = CBUUID(string: "6E400004-B5A3-F393-E0A9-E50E24DCCA9F")
+    let HWFCCharacteristicUUID = CBUUID(string: "6E400005-B5A3-F393-E0A9-E50E24DCCA9F")
+    let NameCharacteristicUUID = CBUUID(string: "6E400006-B5A3-F393-E0A9-E50E24DCCA9F")
     let RSSI_range = -40..<(-15)  // optimal -22dB -> reality -48dB
     let notifyMTU = 20  // Extended Data Length 244 for iPhone 7, 7 Plus
     

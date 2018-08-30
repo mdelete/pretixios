@@ -93,7 +93,7 @@ class BLEManager: NSObject {
     private override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
-        if let uuid = UserDefaults.standard.value(forKey: "last_printer_uuid") as? UUID {
+        if let uuidString = UserDefaults.standard.value(forKey: "last_printer_uuid") as? String, let uuid = UUID(uuidString: uuidString) {
             let peripherals = centralManager.retrievePeripherals(withIdentifiers: [uuid])
             if let peripheral = peripherals.first {
                 print("restored printer from user defaults")
@@ -195,7 +195,7 @@ extension BLEManager: CBCentralManagerDelegate {
         delegate?.didStopScanning(self)
         receiveQueue.removeAll()
         
-        UserDefaults.standard.set(peripheral.identifier, forKey: "last_printer_uuid")
+        UserDefaults.standard.set("\(peripheral.identifier)", forKey: "last_printer_uuid")
         UserDefaults.standard.synchronize()
         print("stored to defaults")
         

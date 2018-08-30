@@ -27,7 +27,7 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Testbadge", comment: ""),
                                                                  style: UIBarButtonItemStyle.done,
                                                                  target: self,
-                                                                 action: #selector(printBadgeAirPrint))
+                                                                 action: #selector(printBadgeBLE))
         BLEManager.sharedInstance.delegate = self
     }
     
@@ -188,7 +188,7 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
     
     @objc func printBadgeBLE() {
         let (maxName, maxCompany) = maxBadge()
-        let data = SLCSPrintFormatter.buildUartPrinterData(lines: [maxName, maxCompany], barcode: "DONOTTRACK", speaker: false)
+        let data = SLCSPrintFormatter.buildUartPrinterData(lines: [maxName, maxCompany], auxiliary: "TESTBADGE")
         BLEManager.sharedInstance.write(data: data)
     }
     
@@ -254,11 +254,10 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
         
         let attributedStringName = NSMutableAttributedString(string: maxName, attributes: attributeName)
         let attributedStringCompany = NSAttributedString(string: "\n\n" + maxCompany, attributes: attributeOther)
-        // FIXME: print barcode
-        //let attributedStringSpecial = NSAttributedString(string: "\n\n" + maxSpecial, attributes: attributeOther)
+        let attributedStringTest = NSAttributedString(string: "\n\nTESTBADGE", attributes: attributeOther)
         
         attributedStringName.append(attributedStringCompany)
-        //attributedStringName.append(attributedStringSpecial)
+        attributedStringName.append(attributedStringTest)
         
         let formatter = UISimpleTextPrintFormatter(attributedText: attributedStringName)
         formatter.textAlignment = .center

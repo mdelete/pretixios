@@ -423,7 +423,11 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     
     @objc private func printBadge() {
         if let order = self.currentOrder, let name = order.attendee_name, let company = order.company {
-            let data = SLCSPrintFormatter.buildUartPrinterData(lines: [name, company], barcode: order.pseudonymization_id, speaker: order.checkin_attention)
+            var text = order.pseudonymization_id
+            if order.checkin_attention {
+                text = "Speaker"
+            }
+            let data = SLCSPrintFormatter.buildUartPrinterData(lines: [name, company], auxiliary: text, auxIsBarcode: !order.checkin_attention)
             BLEManager.sharedInstance.write(data: data)
         }
     }

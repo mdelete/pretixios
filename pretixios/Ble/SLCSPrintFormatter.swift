@@ -29,7 +29,7 @@ class SLCSPrintFormatter: NSObject {
         }
     }
     
-    class func buildUartPrinterData(lines: [String], barcode: String, speaker: Bool) -> Data {
+    class func buildUartPrinterData(lines: [String], auxiliary: String, auxIsBarcode: Bool = false) -> Data {
         
         // Printer setup commands
         let prnInitCmd        = "@\r\n"     // Set speed to 5 ips
@@ -97,12 +97,12 @@ class SLCSPrintFormatter: NSObject {
         }
         
         // Add "Speaker" or Barcode
-        if speaker {
+        if !auxIsBarcode {
             prnYpos = 420
             printString += String(format: "V%d,%d,%@,%d,%d,%@,%@,%@,%@,%d,%@,%d,'%@'\r\n",
                                   prnXpos, prnYpos, prnFontSel, prnFontWidth, prnFontHeight,
                                   prnRCSpacing, prnBold, prnReverse, prnStyle, prnRotate,
-                                  prnAlignment, prnDirection, "Speaker")
+                                  prnAlignment, prnDirection, auxiliary)
         } else {
             prnYpos = 450
             
@@ -116,7 +116,7 @@ class SLCSPrintFormatter: NSObject {
             let qzWidth = 0 // Quiet zone width: 0-20
             
             printString += String(format: "B1%d,%d,%d,%d,%d,%d,%d,%d,%d,'%@'\r\n",
-                                  xPos, prnYpos, bcType, nbWidth, wbWidth, bcHeight, bcRot, hri, qzWidth, barcode)
+                                  xPos, prnYpos, bcType, nbWidth, wbWidth, bcHeight, bcRot, hri, qzWidth, auxiliary)
         }
         
         printString += prnPrintCmd

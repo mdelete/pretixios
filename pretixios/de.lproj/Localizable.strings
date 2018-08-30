@@ -35,8 +35,10 @@
 "Position" = "Position";
 "Please scan a ticket" = "Scanne ein Ticket ein";
 "Please scan a configuration code" = "Scanne einen Konfigurationscode ein";
+"Configuration successful. You can now scan Tickets." = "Konfiguration erfolgreich. Du kannst jetzt Tickets scannen.";
 "Print Badge" = "Badgedruck";
 "Invalid Ticket" = "Ungültiges Ticket";
+"Invalid configuration code" = "Ungültige Konfiguration";
 "Valid Ticket" = "Gültiges Ticket";
 "Already redeemed" = "Bereits eingelöst";
 "No camera access" = "Kein Zugriff auf Kamera";

@@ -14,6 +14,13 @@ struct PretixConfig : Codable {
     let show_info : Bool
     let apikey : String
     let apiurl : String
+    
+    let mqtt_url : String?
+    let mqtt_user : String?
+    let mqtt_password : String?
+    let mqtt_client_id_prefix : String?
+    let mqtt_pub_topic : String?
+    let mqtt_status_topic : String?
 }
 
 struct PretixRedeemResponse : Codable {
@@ -73,7 +80,7 @@ struct PretixOrderResponse : Codable {
             let id : Int
             let item : Int
             let order : String
-            let variation : String?
+            let variation : Int?
             let attendee_name : String?
             let attendee_email : String?
             let voucher : Int?

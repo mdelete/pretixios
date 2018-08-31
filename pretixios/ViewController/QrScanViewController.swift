@@ -616,7 +616,14 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
 
                             UserDefaults.standard.set(true, forKey: "app_configured")
                             UserDefaults.standard.set(false, forKey: "reset_preference")
-                            
+                        
+                            UserDefaults.standard.setValue(config.mqtt_url, forKey: "mqtt_url")
+                            UserDefaults.standard.setValue(config.mqtt_user, forKey: "mqtt_user")
+                            UserDefaults.standard.setValue(config.mqtt_password, forKey: "mqtt_password")
+                            UserDefaults.standard.setValue(config.mqtt_client_id_prefix, forKey: "mqtt_client_id_prefix")
+                            UserDefaults.standard.setValue(config.mqtt_pub_topic, forKey: "mqtt_pub_topic")
+                            UserDefaults.standard.setValue(config.mqtt_status_topic, forKey: "mqtt_status_topic")
+
                             KeychainService.savePassword(token: config.apikey, key: "pretix_api_token")
                             UserDefaults.standard.setValue(config.apiurl, forKey: "pretix_api_base")
                             UserDefaults.standard.synchronize()

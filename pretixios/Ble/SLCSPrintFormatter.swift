@@ -18,7 +18,7 @@ class SLCSPrintFormatter: NSObject {
             return Array(lines.prefix(2))
         } else {
             let start = longLine.startIndex
-            let mid = longLine.index(start, offsetBy: 21)
+            let mid = longLine.index(start, offsetBy: 20)
             if let pos = longLine.range(of: " ", options: String.CompareOptions.backwards, range: start..<mid, locale: nil) {
                 return [String(longLine[start..<pos.lowerBound]), String(longLine[pos.upperBound..<longLine.endIndex])]
             } else if let pos = longLine.range(of: "-", options: String.CompareOptions.backwards, range: start..<mid, locale: nil) {

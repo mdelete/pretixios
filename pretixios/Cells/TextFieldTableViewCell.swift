@@ -14,10 +14,16 @@ enum TextFieldType {
     case number
 }
 
+protocol TextFieldCellDelegate {
+    func textFieldCellShouldReturn(_ cell: TextFieldTableViewCell, textField: UITextField)
+}
+
 class TextFieldTableViewCell: UITableViewCell, UITextFieldDelegate {
 
     let label = UILabel()
     let textField = UITextField()
+    
+    var delegate : TextFieldCellDelegate?
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -93,6 +99,7 @@ class TextFieldTableViewCell: UITableViewCell, UITextFieldDelegate {
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.endEditing(true)
+        delegate?.textFieldCellShouldReturn(self, textField: textField)
         return false
     }
 }

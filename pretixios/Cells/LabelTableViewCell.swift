@@ -13,7 +13,7 @@ class LabelTableViewCell: UITableViewCell {
     let label = UILabel()
     let valueLabel = UILabel()
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
     }
@@ -24,7 +24,7 @@ class LabelTableViewCell: UITableViewCell {
     }
     
     fileprivate func setup() {
-        self.selectionStyle = UITableViewCellSelectionStyle.default
+        self.selectionStyle = UITableViewCell.SelectionStyle.default
         self.accessoryType = .disclosureIndicator
         
         //label.font = UIFont(name: "HelveticaNeue", size: 17.0)

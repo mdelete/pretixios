@@ -39,7 +39,7 @@ class CheckinListTableViewController: UITableViewController, NSFetchedResultsCon
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(refreshControlAction), for: UIControlEvents.valueChanged)
+        refreshControl?.addTarget(self, action: #selector(refreshControlAction), for: UIControl.Event.valueChanged)
         
         self.definesPresentationContext = true;
         self.title = NSLocalizedString("Check-in list", comment: "")

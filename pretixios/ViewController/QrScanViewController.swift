@@ -54,7 +54,7 @@ class InfoView: UIView {
     let ticketTypeLabel = UILabel()
     let orderCodeLabel = UILabel()
     let nameLabel = UILabel()
-    let printButton = UIButton(type: UIButtonType.roundedRect)
+    let printButton = UIButton(type: UIButton.ButtonType.roundedRect)
     
     init() {
         super.init(frame: .zero)
@@ -90,7 +90,7 @@ class InfoView: UIView {
         nameLabel.textColor = .black
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        printButton.setTitle(NSLocalizedString("Print Badge", comment: ""), for: UIControlState.normal)
+        printButton.setTitle(NSLocalizedString("Print Badge", comment: ""), for: UIControl.State.normal)
         printButton.translatesAutoresizingMaskIntoConstraints = false
         printButton.isHidden = true
         
@@ -265,8 +265,8 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         title = "Pretix"
         view.backgroundColor = UIColor.white
         
-        NotificationCenter.default.addObserver(self, selector: #selector(startRunning), name: .UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(stopRunning), name: .UIApplicationWillResignActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(startRunning), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(stopRunning), name: UIApplication.willResignActiveNotification, object: nil)
         
         //videoCaptureDevice?.addObserver(self, forKeyPath: "adjustingFocus", options: .new, context: nil)
         //videoCaptureDevice?.removeObserver(self, forKeyPath: "adjustingFocus")
@@ -485,7 +485,7 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             self.previewLayer!.frame = self.scannerView.bounds
             self.previewLayer!.videoGravity = .resizeAspectFill
             self.scannerView.layer.addSublayer(self.previewLayer!)
-            self.scannerView.bringSubview(toFront: self.laserView)
+            self.scannerView.bringSubviewToFront(self.laserView)
         }
         
         let metadataOutput = AVCaptureMetadataOutput()

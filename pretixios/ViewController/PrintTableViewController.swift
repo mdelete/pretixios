@@ -25,7 +25,7 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Testbadge", comment: ""),
-                                                                 style: UIBarButtonItemStyle.done,
+                                                                 style: UIBarButtonItem.Style.done,
                                                                  target: self,
                                                                  action: #selector(printBadgeBLE))
         BLEManager.sharedInstance.delegate = self
@@ -139,7 +139,7 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
     
     func didStartScanning(_ manager: BLEManager) {
         DispatchQueue.main.async {
-            let spinner = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+            let spinner = UIActivityIndicatorView(style: .gray)
             spinner.startAnimating()
             self.tableView.tableFooterView = spinner
         }
@@ -247,8 +247,8 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
         pc.printInfo = printInfo
         pc.delegate = self
         
-        let attributeName = [ NSAttributedStringKey.font: UIFont(name: "Helvetica-Bold", size: 24.0)! ]
-        let attributeOther = [ NSAttributedStringKey.font: UIFont(name: "Helvetica", size: 20.0)! ]
+        let attributeName = [ NSAttributedString.Key.font: UIFont(name: "Helvetica-Bold", size: 24.0)! ]
+        let attributeOther = [ NSAttributedString.Key.font: UIFont(name: "Helvetica", size: 20.0)! ]
         
         let (maxName, maxCompany) = maxBadge()
         
@@ -286,8 +286,8 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
         pc.printInfo = printInfo
         pc.delegate = self
         
-        let attributeName = [ NSAttributedStringKey.font: UIFont(name: "Helvetica-Bold", size: 24.0)! ]
-        let attributeOther = [ NSAttributedStringKey.font: UIFont(name: "Helvetica", size: 20.0)! ]
+        let attributeName = [ NSAttributedString.Key.font: UIFont(name: "Helvetica-Bold", size: 24.0)! ]
+        let attributeOther = [ NSAttributedString.Key.font: UIFont(name: "Helvetica", size: 20.0)! ]
         
         let attributedStringName = NSMutableAttributedString(string: first, attributes: attributeName)
         let attributedStringCompany = NSAttributedString(string: "\n\n" + second, attributes: attributeOther)

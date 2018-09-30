@@ -13,7 +13,7 @@ class SwitchTableViewCell: UITableViewCell {
     let label = UILabel()
     let swytch = UISwitch()
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
     }
@@ -24,7 +24,7 @@ class SwitchTableViewCell: UITableViewCell {
     }
     
     fileprivate func setup() {
-        self.selectionStyle = UITableViewCellSelectionStyle.none
+        self.selectionStyle = UITableViewCell.SelectionStyle.none
         
         //label.font = UIFont(name: "HelveticaNeue", size: 17.0)
         label.font = .preferredFont(forTextStyle: .body)

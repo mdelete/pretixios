@@ -44,7 +44,7 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
         self.tableView.rowHeight = 50
         
         refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(refreshControlAction), for: UIControlEvents.valueChanged)
+        refreshControl?.addTarget(self, action: #selector(refreshControlAction), for: UIControl.Event.valueChanged)
 
         searchController.searchBar.placeholder = NSLocalizedString("Name / Company / Email", comment: "")
         searchController.searchBar.delegate = self
@@ -79,16 +79,16 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
     
     private func setTitleWithGuests() {
         let string = NSMutableAttributedString()
-        string.append(NSMutableAttributedString(string: NSLocalizedString("Attendees\n", comment: ""), attributes: [NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Bold", size: 18.0)!]))
+        string.append(NSMutableAttributedString(string: NSLocalizedString("Attendees\n", comment: ""), attributes: [NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Bold", size: 18.0)!]))
         
         if UserDefaults.standard.bool(forKey: "app_configured") == true {
             let total = Stats.fetchCount(for: "Order", predicate: NSPredicate(value: true), with: SyncManager.sharedInstance.viewContext)
             let checkins = Stats.fetchCount(for: "Order", predicate: NSPredicate(format: "checkin != NULL"), with: SyncManager.sharedInstance.viewContext)
             let format = String(format: NSLocalizedString("%d total, %d checkins", comment: ""), total, checkins)
-            string.append(NSMutableAttributedString(string: format, attributes: [NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Thin", size: 9.0)!, NSAttributedStringKey.foregroundColor: UIColor.darkGray]))
+            string.append(NSMutableAttributedString(string: format, attributes: [NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Thin", size: 9.0)!, NSAttributedString.Key.foregroundColor: UIColor.darkGray]))
             setTableViewPlaceholder(isEmpty: false)
         } else {
-            string.append(NSMutableAttributedString(string: NSLocalizedString("No configuration", comment: ""), attributes: [NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Thin", size: 10.0)!, NSAttributedStringKey.foregroundColor: UIColor.darkGray]))
+            string.append(NSMutableAttributedString(string: NSLocalizedString("No configuration", comment: ""), attributes: [NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Thin", size: 10.0)!, NSAttributedString.Key.foregroundColor: UIColor.darkGray]))
             setTableViewPlaceholder(isEmpty: true)
         }
         
@@ -110,9 +110,9 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
             messageLabel.font = UIFont(name: "HelveticaNeue-Thin", size: 20)
             messageLabel.sizeToFit()
             self.tableView.backgroundView = messageLabel;
-            self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+            self.tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         } else {
-            self.tableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
+            self.tableView.separatorStyle = UITableViewCell.SeparatorStyle.singleLine
             self.tableView.backgroundView = nil
         }
     }

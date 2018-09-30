@@ -15,7 +15,7 @@ class AttendeeTableViewCell : UITableViewCell {
     let auxiliaryLabel = UILabel()
     let sourceView = UIView()
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
     }
@@ -27,7 +27,7 @@ class AttendeeTableViewCell : UITableViewCell {
     
     fileprivate func setup() {
         
-        self.selectionStyle = UITableViewCellSelectionStyle.default
+        self.selectionStyle = UITableViewCell.SelectionStyle.default
         
         sourceView.backgroundColor = UIColor.clear
         sourceView.translatesAutoresizingMaskIntoConstraints = false

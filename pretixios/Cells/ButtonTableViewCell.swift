@@ -14,10 +14,10 @@ protocol ButtonCellDelegate {
 
 class ButtonTableViewCell: UITableViewCell {
 
-    let button = UIButton(type: UIButtonType.system)
+    let button = UIButton(type: UIButton.ButtonType.system)
     var delegate : ButtonCellDelegate?
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
     }

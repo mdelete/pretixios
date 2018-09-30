@@ -213,7 +213,7 @@ class DetailTableViewController: UITableViewController, ButtonCellDelegate, UISp
     
     // MARK: - SplitViewControllerDelegate
     
-    func splitViewController(_ svc: UISplitViewController, willChangeTo displayMode: UISplitViewControllerDisplayMode) {
+    func splitViewController(_ svc: UISplitViewController, willChangeTo displayMode: UISplitViewController.DisplayMode) {
         self.navigationItem.setLeftBarButton(nil, animated: true)
     }
     

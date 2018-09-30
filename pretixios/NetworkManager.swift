@@ -160,6 +160,30 @@ class NetworkManager : NSObject, URLSessionDelegate {
     }
     
     // MARK: - Rest API Calls
+    
+    func postDeviceInitialize(config: PretixConfigHandshake, completion: @escaping (PretixInitializeResponse?, Error?) -> Void) {
+        guard let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else { return }
+        let initRequestObj = PretixInitializeRequest(token: config.token, hardware_model: UIDevice.current.modelDescriptor, software_version: version)
+        var request = URLRequest(url: config.url)
+        request.httpMethod = "POST"
+        request.httpBody = try? self.encoder.encode(initRequestObj)
+        
+        let dataTask = session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
+            if let error = error {
+                print("\(error.localizedDescription)")
+                completion(nil, error)
+            } else {
+                if let response = response as? HTTPURLResponse, response.statusCode == 200, let data = data {
+                    let response = try? self.decoder.decode(PretixInitializeResponse.self, from: data)
+                    completion(response, nil)
+                } else {
+                    // 400
+                    completion(nil, nil)
+                }
+            }
+        })
+        dataTask.resume()
+    }
 
     func postPretixRedeem(order: Order, completion: @escaping (PretixRedeemResponse?, Error?) -> Void) {
         
@@ -180,7 +204,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
         
         var request = URLRequest(url: URL(string: base + "/checkinlists/\(list)/positions/\(order.position)/redeem/")!)
         request.httpMethod = "POST"
-        request.setValue("Token " + token, forHTTPHeaderField: "Authorization")
+        request.setValue("Device " + token, forHTTPHeaderField: "Authorization")
         request.httpBody = try? self.encoder.encode(PretixRedeemRequestBody(force: false, ignore_unpaid: true, nonce: "", datetime: order.checkin, questions_supported: false, answers: nil))
         // FIXME: include nonce in sync process
         
@@ -242,7 +266,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
         }
         
         var request = URLRequest(url: url)
-        request.setValue("Token " + token, forHTTPHeaderField: "Authorization")
+        request.setValue("Device " + token, forHTTPHeaderField: "Authorization")
         
         let dataTask = session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
             if error == nil {
@@ -298,90 +322,6 @@ class NetworkManager : NSObject, URLSessionDelegate {
         dataTask.resume()
     }
     
-    fileprivate let vouchersPath = "/vouchers/"
-    
-    func getPretixVouchers() {
-        if let base = UserDefaults.standard.string(forKey: "pretix_api_base") {
-            NetworkManager.sharedInstance.getPretixVouchers(path: base + vouchersPath, progress: 0, status: 0)
-        } else {
-            SyncManager.sharedInstance.failure(vouchersPath, code: -1)
-        }
-    }
-    
-    fileprivate func getPretixVouchers(path: String?, progress: Int, status: Int) {
-        
-        guard let path = path, let url = URL(string: path) else {
-            if status == 200 {
-                syncManager.success(vouchersPath, code: status)
-                print("last chunk success")
-            } else {
-                syncManager.failure(vouchersPath, code: status)
-            }
-            return
-        }
-        
-        guard let token = KeychainService.loadPassword(key: "pretix_api_token") else {
-            print("pretix_api_token not configured")
-            return
-        }
-        
-        guard let context = syncManager.backgroundContext else {
-            print("No Background context")
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.setValue("Token " + token, forHTTPHeaderField: "Authorization")
-        
-        let dataTask = session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-            if error == nil {
-                let status = (response as! HTTPURLResponse).statusCode
-                if status == 200, let data = data {
-                    do {
-                        let response = try self.decoder.decode(PretixVoucherResponse.self, from: data)
-                        let fetchRequest: NSFetchRequest<Voucher> = Voucher.fetchRequest()
-                        for result in response.results {
-                            
-                            fetchRequest.predicate = NSPredicate(format: "id == %@", result.id)
-                            
-                            do {
-                                let results = try context.fetch(fetchRequest)
-                                if results.count == 1 {
-                                    print("Remote update voucher \(result.id)")
-                                } else if (results.count == 0) {
-                                    let voucher = Voucher(context: context)
-                                    voucher.id = Int32(result.id)
-                                    // FIXME: implement
-                                    print("Remote new voucher \(result.id)")
-                                } else {
-                                    print("HORROR! \(results.count)")
-                                }
-                            } catch {
-                                print("Fetch error: \(error) description: \(error.localizedDescription)")
-                            }
-
-                        }
-                        
-                        self.syncManager.saveBackgroundPartial(state: (response.results.count + progress, response.count))
-                        self.getPretixVouchers(path: response.next, progress: response.results.count, status: status)
-                        
-                    } catch let error {
-                        print(error)
-                        self.syncManager.failure(self.vouchersPath, code: -2)
-                    }
-                } else if status == 304 {
-                    self.syncManager.success(self.vouchersPath, code: status)
-                } else {
-                    self.syncManager.failure(self.vouchersPath, code: status)
-                }
-            } else {
-                print("\(error!.localizedDescription)")
-                self.syncManager.failure(self.vouchersPath, code: -1)
-            }
-        })
-        dataTask.resume()
-    }
-    
     fileprivate let ordersPath = "/orders/"
     
     func getPretixOrders() {
@@ -421,7 +361,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
         }
         
         var request = URLRequest(url: url)
-        request.setValue("Token " + token, forHTTPHeaderField: "Authorization")
+        request.setValue("Device " + token, forHTTPHeaderField: "Authorization")
         
         let dataTask = session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
             if error == nil {
@@ -538,7 +478,7 @@ class NetworkManager : NSObject, URLSessionDelegate {
         }
         
         var request = URLRequest(url: url)
-        request.setValue("Token " + token, forHTTPHeaderField: "Authorization")
+        request.setValue("Device " + token, forHTTPHeaderField: "Authorization")
         
         let dataTask = session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
             if error == nil {

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-extension String {
+public extension String {
     
     func parsePSQLFractionedDate() -> Date? {
         
@@ -40,7 +40,7 @@ extension String {
     
 }
 
-extension Data {
+public extension Data {
     
     func sha256() -> String {
         var hash = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
@@ -61,7 +61,7 @@ extension Data {
     
 }
 
-extension Date {
+public extension Date {
     
     func rfc1123String() -> String {
         
@@ -101,7 +101,7 @@ extension Date {
     
 }
 
-extension UIColor {
+public extension UIColor {
     
     public convenience init(hexString: String) {
         let hexString = hexString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
@@ -144,8 +144,25 @@ extension UIColor {
     
 }
 
-extension Int {
+public extension Int {
     var nsNumber : NSNumber {
         return NSNumber(value: self)
+    }
+}
+
+public extension UIDevice {
+    var modelDescriptor: String {
+#if targetEnvironment(simulator)
+        let identifier = ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"]!
+#else
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let identifier = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8 , value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+#endif
+        return identifier
     }
 }

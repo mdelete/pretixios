@@ -610,28 +610,32 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                             print("Fetch error: \(error.localizedDescription)")
                         }
                     } else {
-                        if let config = try? JSONDecoder().decode(PretixConfig.self, from: qrstring.data(using: .utf8)!) {
+                        if let config = try? JSONDecoder().decode(PretixConfigHandshake.self, from: qrstring.data(using: .utf8)!), config.handshake_version == 1 {
                             print("\(config)")
-                            infoView.setConfigurationView(result: true)
-
-                            UserDefaults.standard.set(true, forKey: "app_configured")
-                            UserDefaults.standard.set(false, forKey: "reset_preference")
-                        
-                            UserDefaults.standard.setValue(config.mqtt_url, forKey: "mqtt_url")
-                            UserDefaults.standard.setValue(config.mqtt_user, forKey: "mqtt_user")
-                            UserDefaults.standard.setValue(config.mqtt_password, forKey: "mqtt_password")
-                            UserDefaults.standard.setValue(config.mqtt_client_id_prefix, forKey: "mqtt_client_id_prefix")
-                            UserDefaults.standard.setValue(config.mqtt_pub_topic, forKey: "mqtt_pub_topic")
-                            UserDefaults.standard.setValue(config.mqtt_status_topic, forKey: "mqtt_status_topic")
-
-                            KeychainService.savePassword(token: config.apikey, key: "pretix_api_token")
-                            UserDefaults.standard.setValue(config.apiurl, forKey: "pretix_api_base")
-                            UserDefaults.standard.synchronize()
-                            
-                            NetworkManager.sharedInstance.getPretixItems()
-                            NetworkManager.sharedInstance.getPretixCheckinlist()
-                            NetworkManager.sharedInstance.getPretixOrders()
-                            
+                            NetworkManager.sharedInstance.postDeviceInitialize(config: config) { (response, error) in
+                                if let response = response {
+                                    self.infoView.setConfigurationView(result: true)
+                                    
+                                    UserDefaults.standard.set(true, forKey: "app_configured")
+                                    UserDefaults.standard.set(false, forKey: "reset_preference")
+                                    
+                                    KeychainService.savePassword(token: response.api_token, key: "pretix_api_token")
+                                    
+                                    //FIXME 
+                                    //UserDefaults.standard.setValue(response., forKey: "pretix_api_base")
+                                    UserDefaults.standard.setValue(response.device_id, forKey: "")
+                                    UserDefaults.standard.setValue(response.name, forKey: "")
+                                    UserDefaults.standard.setValue(response.organizer, forKey: "")
+                                    UserDefaults.standard.setValue(response.unique_serial, forKey: "")
+                                    UserDefaults.standard.synchronize()
+                                    
+                                    NetworkManager.sharedInstance.getPretixItems()
+                                    NetworkManager.sharedInstance.getPretixCheckinlist()
+                                    NetworkManager.sharedInstance.getPretixOrders()
+                                } else {
+                                    self.infoView.setConfigurationView(result: false)
+                                }
+                            }
                         } else {
                             infoView.setConfigurationView(result: false)
                         }

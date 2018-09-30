@@ -8,19 +8,26 @@
 
 import Foundation
 
-struct PretixConfig : Codable {
-    let version : Int
-    let allow_search : Bool
-    let show_info : Bool
-    let apikey : String
-    let apiurl : String
-    
-    let mqtt_url : String?
-    let mqtt_user : String?
-    let mqtt_password : String?
-    let mqtt_client_id_prefix : String?
-    let mqtt_pub_topic : String?
-    let mqtt_status_topic : String?
+struct PretixConfigHandshake : Codable {
+    let handshake_version : Int
+    let url : URL
+    let token : String
+}
+
+struct PretixInitializeRequest : Codable {
+    let token : String
+    let hardware_brand = "Apple"
+    let hardware_model : String
+    let software_brand = "Silpion-Prextios"
+    let software_version : String
+}
+
+struct PretixInitializeResponse : Codable {
+    let organizer : String
+    let device_id : Int
+    let unique_serial : String
+    let api_token : String
+    let name : String
 }
 
 struct PretixRedeemResponse : Codable {
@@ -117,39 +124,6 @@ struct PretixCheckinListsResponse : Codable {
     let results : [Result]
 }
 
-struct PretixVoucherResponse : Codable {
-    
-    struct Result : Codable {
-        
-        enum PriceMode : String, Codable {
-            case none
-            case set
-            case subtract
-            case percent
-        }
-        
-        let id : Int
-        let code : String
-        let max_usages : Int
-        let redeemed : Int
-        let valid_until : Date?
-        let block_quota : Bool
-        let allow_ignore_quota : Bool
-        let price_mode : PriceMode
-        let value : String
-        let item : Int?
-        let variation : Int?
-        let quota : Int?
-        let tag : String
-        let comment : String
-        let subevent : Int?
-    }
-    
-    let count : Int
-    let next : String?
-    let results : [Result]
-}
-
 struct PretixItemResponse : Codable {
     
     struct Result : Codable {
@@ -162,6 +136,3 @@ struct PretixItemResponse : Codable {
     let next : String?
     let results : [Result]
 }
-
-
-

@@ -11,6 +11,8 @@ import LocalAuthentication
 
 class SettingsViewController: UITableViewController, ButtonCellDelegate {
 
+    private var selectedEvent : String?
+    
     convenience init() {
         self.init(style: .grouped)
     }
@@ -26,6 +28,9 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if let event = UserDefaults.standard.string(forKey: "pretix_event_slug") {
+            selectedEvent = "\(event) - \(UserDefaults.standard.integer(forKey: "pretix_checkin_list"))"
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -56,6 +61,7 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
         case(0, 1):
             let cell = tableView.dequeueReusableCell(withIdentifier: "labelCell", for: indexPath) as! LabelTableViewCell
             cell.label.text = NSLocalizedString("Event", comment: "")
+            cell.valueLabel.text = selectedEvent
             return cell
         case(1, 0):
             let cell = tableView.dequeueReusableCell(withIdentifier: "buttonCell", for: indexPath) as! ButtonTableViewCell

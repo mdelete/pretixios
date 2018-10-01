@@ -12,7 +12,7 @@ import CoreData
 class EventListTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
     
     private var _fetchedResultsController: NSFetchedResultsController<Event>?
-    private var selectedEvent : Event?
+    private var selectedEventSlug : String?
     
     var fetchedResultsController: NSFetchedResultsController<Event> {
         if let fetchedResultsController = _fetchedResultsController {
@@ -53,8 +53,7 @@ class EventListTableViewController: UITableViewController, NSFetchedResultsContr
             _fetchedResultsController = nil
             receiveSyncDoneNotification()
         }
-        
-        // selectedEvent = UserDefaults.standard.string(forKey: "pretix_selected_event") FIXME
+        selectedEventSlug = UserDefaults.standard.string(forKey: "pretix_event_slug")
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -102,7 +101,7 @@ class EventListTableViewController: UITableViewController, NSFetchedResultsContr
     func configure(_ cell: UITableViewCell, at indexPath: IndexPath) {
         let event = self.fetchedResultsController.object(at: indexPath)
         cell.textLabel?.text = event.name
-        if event.name == selectedEvent?.name {
+        if event.slug == selectedEventSlug {
             cell.accessoryType = .checkmark
         } else {
             cell.accessoryType = .none
@@ -144,9 +143,8 @@ class EventListTableViewController: UITableViewController, NSFetchedResultsContr
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let event = self.fetchedResultsController.object(at: indexPath)
-        selectedEvent = event
         let checkinListTableViewController = CheckinListTableViewController()
-        checkinListTableViewController.selectedEventSlug = selectedEvent?.slug
+        checkinListTableViewController.selectedEventSlug = event.slug
         self.navigationController?.pushViewController(checkinListTableViewController, animated: true)
     }
     

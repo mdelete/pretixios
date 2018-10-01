@@ -249,6 +249,9 @@ class DetailTableViewController: UITableViewController, ButtonCellDelegate, UISp
                             message = NSLocalizedString("Already redeemed", comment: "")
                             break
                         }
+                    } else {
+                        title = NSLocalizedString("Redeem successful", comment: "")
+                        message = NSLocalizedString("User checked in", comment: "")
                     }
                     
                     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

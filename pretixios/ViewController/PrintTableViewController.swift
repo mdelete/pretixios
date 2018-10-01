@@ -23,11 +23,10 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Testbadge", comment: ""),
                                                                  style: UIBarButtonItem.Style.done,
                                                                  target: self,
-                                                                 action: #selector(printBadgeBLE))
+                                                                 action: #selector(printBadgeAirPrint))
         BLEManager.sharedInstance.delegate = self
     }
     
@@ -64,15 +63,16 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
             switch indexPath.row {
             case 0:
                 cell.textLabel?.text = NSLocalizedString("None", comment: "")
-                cell.textLabel?.textColor = UIColor.gray
+                cell.textLabel?.textColor = UIColor.black
             case 1:
                 cell.textLabel?.text = NSLocalizedString("AirPrint", comment: "AirPrint is a brand name")
+                cell.textLabel?.textColor = UIColor.black
             case 2:
                 cell.textLabel?.text = NSLocalizedString("MQTT", comment: "")
                 cell.textLabel?.textColor = UIColor.gray
             case 3:
                 cell.textLabel?.text = NSLocalizedString("Bluetooth Serial", comment: "")
-                //cell.textLabel?.textColor = UIColor.gray
+                cell.textLabel?.textColor = UIColor.gray
             default: ()
             }
             if selectedSetting == indexPath.row {
@@ -82,7 +82,6 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
                 cell.accessoryType = .none
                 cell.selectionStyle = .none
             }
-            
         } else {
             let peripheral = discoveredPeripherals[indexPath.row]
             cell.textLabel?.text = peripheral.name
@@ -203,7 +202,7 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
         }
         
         override var printableRect: CGRect {
-            return CGRect(origin: CGPoint(x: 0, y: 6), size: size)
+            return CGRect(origin: CGPoint(x: 0, y: 10), size: size)
         }
         
         var cut: CGFloat {
@@ -247,14 +246,17 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
         pc.printInfo = printInfo
         pc.delegate = self
         
-        let attributeName = [ NSAttributedString.Key.font: UIFont(name: "Helvetica-Bold", size: 24.0)! ]
-        let attributeOther = [ NSAttributedString.Key.font: UIFont(name: "Helvetica", size: 20.0)! ]
-        
         let (maxName, maxCompany) = maxBadge()
         
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.paragraphSpacing = 15
+        
+        let attributeName = [ NSAttributedString.Key.font: UIFont(name: "Helvetica-Bold", size: 24.0)!, NSAttributedString.Key.paragraphStyle: paragraphStyle ]
+        let attributeOther = [ NSAttributedString.Key.font: UIFont(name: "Helvetica", size: 20.0)!, NSAttributedString.Key.paragraphStyle: paragraphStyle ]
+        
         let attributedStringName = NSMutableAttributedString(string: maxName, attributes: attributeName)
-        let attributedStringCompany = NSAttributedString(string: "\n\n" + maxCompany, attributes: attributeOther)
-        let attributedStringTest = NSAttributedString(string: "\n\nTESTBADGE", attributes: attributeOther)
+        let attributedStringCompany = NSAttributedString(string: "\n" + maxCompany, attributes: attributeOther)
+        let attributedStringTest = NSAttributedString(string: "\nTESTBADGE", attributes: attributeOther)
         
         attributedStringName.append(attributedStringCompany)
         attributedStringName.append(attributedStringTest)
@@ -286,16 +288,19 @@ class PrintTableViewController: UITableViewController, UIPrintInteractionControl
         pc.printInfo = printInfo
         pc.delegate = self
         
-        let attributeName = [ NSAttributedString.Key.font: UIFont(name: "Helvetica-Bold", size: 24.0)! ]
-        let attributeOther = [ NSAttributedString.Key.font: UIFont(name: "Helvetica", size: 20.0)! ]
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.paragraphSpacing = 15
+        
+        let attributeName = [ NSAttributedString.Key.font: UIFont(name: "Helvetica-Bold", size: 24.0)!, NSAttributedString.Key.paragraphStyle: paragraphStyle ]
+        let attributeOther = [ NSAttributedString.Key.font: UIFont(name: "Helvetica", size: 20.0)!, NSAttributedString.Key.paragraphStyle: paragraphStyle ]
         
         let attributedStringName = NSMutableAttributedString(string: first, attributes: attributeName)
-        let attributedStringCompany = NSAttributedString(string: "\n\n" + second, attributes: attributeOther)
+        let attributedStringCompany = NSAttributedString(string: "\n" + second, attributes: attributeOther)
         
         attributedStringName.append(attributedStringCompany)
         
         if let third = third {
-            let attributedStringSpecial = NSAttributedString(string: "\n\n" + third, attributes: attributeOther)
+            let attributedStringSpecial = NSAttributedString(string: "\n" + third, attributes: attributeOther)
             attributedStringName.append(attributedStringSpecial)
         }
         

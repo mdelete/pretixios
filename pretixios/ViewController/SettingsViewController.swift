@@ -111,6 +111,7 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
             UserDefaults.standard.set(false, forKey: "app_configured")
             UserDefaults.standard.synchronize()
             SyncManager.sharedInstance.deleteDatabase()
+            //FIXME: POST /api/v1/device/revoke
         })
         
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: { _ in

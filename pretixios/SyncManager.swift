@@ -55,6 +55,7 @@ class SyncManager: NSObject {
         }
     }
     
+    // FIXME: unused
     public func checkDefaultCheckinList() {
         
         var checkinList = UserDefaults.standard.value(forKey: "pretix_checkin_list") as? Int32

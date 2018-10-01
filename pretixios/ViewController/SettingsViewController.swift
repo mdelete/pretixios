@@ -35,7 +35,7 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch(section) {
         case 0:
-            return 3
+            return 2
         case 1:
             return 1
         case 2:
@@ -49,27 +49,19 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
         
         switch(indexPath.section, indexPath.row) {
         case(0, 0):
-            let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell", for: indexPath) as! SwitchTableViewCell
-            cell.label.text = NSLocalizedString("Enable NFC", comment: "")
-            return cell
-            
-        case(0, 1):
             let cell = tableView.dequeueReusableCell(withIdentifier: "labelCell", for: indexPath) as! LabelTableViewCell
             cell.label.text = NSLocalizedString("Badge print", comment: "")
             cell.valueLabel.text = NSLocalizedString("AirPrint", comment: "AirPrint is a brand name")
             return cell
-        // FIXME: off, ble serial, airprint (if off, hide button in scanner)
-        case(0, 2):
+        case(0, 1):
             let cell = tableView.dequeueReusableCell(withIdentifier: "labelCell", for: indexPath) as! LabelTableViewCell
-            cell.label.text = NSLocalizedString("Check-in list", comment: "")
+            cell.label.text = NSLocalizedString("Event", comment: "")
             return cell
-        // FIXME: display name of list and display chooser
         case(1, 0):
             let cell = tableView.dequeueReusableCell(withIdentifier: "buttonCell", for: indexPath) as! ButtonTableViewCell
             cell.title = NSLocalizedString("Delete configuration & data", comment: "")
             cell.delegate = self
             return cell
-            
         default:
             return tableView.dequeueReusableCell(withIdentifier: "labelCell", for: indexPath)
         }
@@ -88,12 +80,12 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch(indexPath.section, indexPath.row) {
-        case(0,1):
+        case(0,0):
             let printTableViewController = PrintTableViewController()
             self.navigationController?.pushViewController(printTableViewController, animated: true)
-        case(0,2):
-            let checkinListTableViewController = CheckinListTableViewController()
-            self.navigationController?.pushViewController(checkinListTableViewController, animated: true)
+        case(0,1):
+            let eventListTableViewController = EventListTableViewController()
+            self.navigationController?.pushViewController(eventListTableViewController, animated: true)
         default: ()
         }
     }

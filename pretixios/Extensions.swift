@@ -166,3 +166,13 @@ public extension UIDevice {
         return identifier
     }
 }
+
+public extension URL {
+    init?(optString: String?) {
+        if let s = optString {
+            self.init(string: s)
+        } else {
+            return nil
+        }
+    }
+}

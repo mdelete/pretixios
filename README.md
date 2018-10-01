@@ -9,7 +9,7 @@ Project status
 
 ***USE AT YOUR OWN RISK***
 
-This project is work-in-progess. It uses the new *Pretix* API not the deprecated *Prextidroid* API for connecting with the pretix portal. 
+This project is work-in-progess. It uses the new *Pretix* API not the deprecated *Prextidroid* API for connecting with the pretix portal as well as the new device provisioning. 
 
 Features that work:
 
@@ -17,22 +17,18 @@ Features that work:
 * Scanning and validating tickets simultaneously on multiple devices
 * Manually browsing for an attendee, viewing details and manual check in
 * Support for usage without an internet connection
+* Badge printing using AirPrint
 
 Configuration
 -------------
 
-Like with [pretixdroid](https://github.com/pretix/pretixdroid/) the app is configured using a QR-Code, however it is currently not usable with the orginal config code from the pretix portal.
+The app is using the new device provisioning that is currently in beta stage. It does *not* work using *pretixdroid* config codes.
 
-We are working on this with pretix but for the time beeing, you need to create the code by yourself using the following JSON-string and filling out the blanks:
-
-    {"version": 5, "allow_search": true, "show_info": true, "apikey": "PRETIX API KEY (_NOT_ PRETIXDROID)", "apiurl": "https://pretix.eu/api/v1/organizers/ORGANIZER_SLUG/events/EVENT_SLUG"}
 
 Next features
 -------------
 
 * A lot of cleanup and fixes
-* Clean offline support
-* Badge printing using AirPrint and BLE
 
 Design features
 ---------------

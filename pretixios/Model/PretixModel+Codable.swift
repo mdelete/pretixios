@@ -18,7 +18,7 @@ struct PretixInitializeRequest : Codable {
     let token : String
     let hardware_brand = "Apple"
     let hardware_model : String
-    let software_brand = "Silpion-Prextios"
+    let software_brand = "Silpion Prextios"
     let software_version : String
 }
 
@@ -117,6 +117,17 @@ struct PretixCheckinListsResponse : Codable {
         let name : String
         let checkin_count : Int
         let position_count : Int
+    }
+    
+    let count : Int
+    let next : String?
+    let results : [Result]
+}
+
+struct PretixEventReponse : Codable {
+    struct Result : Codable {
+        let slug : String
+        let name : [String:String]
     }
     
     let count : Int

@@ -18,6 +18,7 @@ extension Checkinlist {
     }
 
     @NSManaged public var id: Int32
+    @NSManaged public var slug: String
     @NSManaged public var name: String?
     @NSManaged public var checkin_count: Int32
     @NSManaged public var position_count: Int32

@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17G65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14315.18" systemVersion="17G65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Checkinlist" representedClassName=".Checkinlist" syncable="YES">
         <attribute name="checkin_count" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="position_count" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="slug" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Event" representedClassName=".Event" syncable="YES">
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="slug" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Item" representedClassName=".Item" syncable="YES">
         <attribute name="id" attributeType="Integer 32" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="slug" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Order" representedClassName=".Order" syncable="YES">
         <attribute name="attendee_email" optional="YES" attributeType="String" syncable="YES"/>
@@ -38,30 +44,11 @@
         <attribute name="path" attributeType="String" syncable="YES"/>
         <attribute name="retry" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
     </entity>
-    <entity name="Voucher" representedClassName=".Voucher" syncable="YES">
-        <attribute name="allow_ignore_quota" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="block_quota" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="code" attributeType="String" syncable="YES"/>
-        <attribute name="comment" attributeType="String" syncable="YES"/>
-        <attribute name="id" attributeType="Integer 32" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="item" optional="YES" attributeType="Integer 32" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="max_usages" attributeType="Integer 32" defaultValueString="1" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="price_mode" attributeType="Transformable" syncable="YES"/>
-        <attribute name="quota" optional="YES" attributeType="Integer 32" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="redeemed" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="subevent" optional="YES" attributeType="Integer 32" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="synced" optional="YES" attributeType="Integer 16" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="synctime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="tag" attributeType="String" syncable="YES"/>
-        <attribute name="valid_until" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="value" attributeType="String" syncable="YES"/>
-        <attribute name="variation" optional="YES" attributeType="Integer 32" usesScalarValueType="YES" syncable="YES"/>
-    </entity>
     <elements>
-        <element name="Checkinlist" positionX="-27" positionY="144" width="128" height="105"/>
+        <element name="Checkinlist" positionX="-27" positionY="144" width="128" height="120"/>
+        <element name="Item" positionX="-36" positionY="135" width="128" height="90"/>
         <element name="Order" positionX="-63" positionY="-18" width="128" height="345"/>
         <element name="Syncstate" positionX="-36" positionY="9" width="128" height="105"/>
-        <element name="Voucher" positionX="-18" positionY="108" width="128" height="300"/>
-        <element name="Item" positionX="-36" positionY="135" width="128" height="75"/>
+        <element name="Event" positionX="-36" positionY="135" width="128" height="75"/>
     </elements>
 </model>

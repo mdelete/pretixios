@@ -59,7 +59,8 @@ class ButtonTableViewCell: UITableViewCell {
     
         NSLayoutConstraint.activate([
             button.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
-            button.heightAnchor.constraint(equalToConstant: 44.5),
+            //button.heightAnchor.constraint(equalToConstant: 44.5),
+            button.heightAnchor.constraint(greaterThanOrEqualToConstant: 43.5),
             button.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             button.bottomAnchor.constraint(lessThanOrEqualTo: self.contentView.bottomAnchor),
             button.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.8)

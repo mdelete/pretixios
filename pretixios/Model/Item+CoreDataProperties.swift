@@ -18,5 +18,6 @@ extension Item {
 
     @NSManaged public var id: Int32
     @NSManaged public var name: String?
+    @NSManaged public var slug: String
 
 }

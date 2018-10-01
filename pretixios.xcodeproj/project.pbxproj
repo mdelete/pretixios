@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		940A83842100B86E00EA3873 /* Syncstate+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A837E2100B86E00EA3873 /* Syncstate+CoreDataClass.swift */; };
 		940A83852100B86E00EA3873 /* Syncstate+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A837F2100B86E00EA3873 /* Syncstate+CoreDataProperties.swift */; };
-		940A83862100B86E00EA3873 /* Voucher+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A83802100B86E00EA3873 /* Voucher+CoreDataClass.swift */; };
-		940A83872100B86E00EA3873 /* Voucher+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A83812100B86E00EA3873 /* Voucher+CoreDataProperties.swift */; };
 		940A83882100B86E00EA3873 /* Order+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A83822100B86E00EA3873 /* Order+CoreDataClass.swift */; };
 		940A83892100B86E00EA3873 /* Order+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A83832100B86E00EA3873 /* Order+CoreDataProperties.swift */; };
 		940A838B2100E95B00EA3873 /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A838A2100E95B00EA3873 /* ListTableViewController.swift */; };
@@ -22,6 +20,9 @@
 		9459E535212B1338009211FF /* Item+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459E533212B1338009211FF /* Item+CoreDataClass.swift */; };
 		9459E536212B1338009211FF /* Item+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459E534212B1338009211FF /* Item+CoreDataProperties.swift */; };
 		9461DB132118B32900BA7972 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9461DB122118B32900BA7972 /* SwitchTableViewCell.swift */; };
+		946DC5732162310600289796 /* Event+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946DC5712162310600289796 /* Event+CoreDataClass.swift */; };
+		946DC5742162310600289796 /* Event+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946DC5722162310600289796 /* Event+CoreDataProperties.swift */; };
+		946DC5762162477300289796 /* EventListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946DC5752162477300289796 /* EventListTableViewController.swift */; };
 		94B168A220C97C67002C9C2E /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B168A120C97C67002C9C2E /* BLEManager.swift */; };
 		94D3E61A2098B04B00FB2894 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3E6192098B04B00FB2894 /* AppDelegate.swift */; };
 		94D3E6232098B04D00FB2894 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94D3E6222098B04D00FB2894 /* Assets.xcassets */; };
@@ -51,8 +52,6 @@
 /* Begin PBXFileReference section */
 		940A837E2100B86E00EA3873 /* Syncstate+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Syncstate+CoreDataClass.swift"; sourceTree = "<group>"; };
 		940A837F2100B86E00EA3873 /* Syncstate+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Syncstate+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		940A83802100B86E00EA3873 /* Voucher+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Voucher+CoreDataClass.swift"; sourceTree = "<group>"; };
-		940A83812100B86E00EA3873 /* Voucher+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Voucher+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		940A83822100B86E00EA3873 /* Order+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Order+CoreDataClass.swift"; sourceTree = "<group>"; };
 		940A83832100B86E00EA3873 /* Order+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Order+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		940A838A2100E95B00EA3873 /* ListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
@@ -64,6 +63,9 @@
 		9459E533212B1338009211FF /* Item+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataClass.swift"; sourceTree = "<group>"; };
 		9459E534212B1338009211FF /* Item+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		9461DB122118B32900BA7972 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
+		946DC5712162310600289796 /* Event+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+CoreDataClass.swift"; sourceTree = "<group>"; };
+		946DC5722162310600289796 /* Event+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		946DC5752162477300289796 /* EventListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListTableViewController.swift; sourceTree = "<group>"; };
 		94B168A120C97C67002C9C2E /* BLEManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
 		94B168A420CA17C5002C9C2E /* pretixios.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = pretixios.entitlements; sourceTree = "<group>"; };
 		94D3E6162098B04B00FB2894 /* pretixios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pretixios.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,6 +171,7 @@
 				94D3E65E2098BA9900FB2894 /* SettingsViewController.swift */,
 				940A83902101B05F00EA3873 /* CheckinListTableViewController.swift */,
 				940A83922101B39300EA3873 /* PrintTableViewController.swift */,
+				946DC5752162477300289796 /* EventListTableViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -178,14 +181,14 @@
 			children = (
 				940A837E2100B86E00EA3873 /* Syncstate+CoreDataClass.swift */,
 				940A837F2100B86E00EA3873 /* Syncstate+CoreDataProperties.swift */,
-				940A83802100B86E00EA3873 /* Voucher+CoreDataClass.swift */,
-				940A83812100B86E00EA3873 /* Voucher+CoreDataProperties.swift */,
 				940A83822100B86E00EA3873 /* Order+CoreDataClass.swift */,
 				940A83832100B86E00EA3873 /* Order+CoreDataProperties.swift */,
 				9459E533212B1338009211FF /* Item+CoreDataClass.swift */,
 				9459E534212B1338009211FF /* Item+CoreDataProperties.swift */,
 				940A838C2101154C00EA3873 /* Checkinlist+CoreDataClass.swift */,
 				940A838D2101154C00EA3873 /* Checkinlist+CoreDataProperties.swift */,
+				946DC5712162310600289796 /* Event+CoreDataClass.swift */,
+				946DC5722162310600289796 /* Event+CoreDataProperties.swift */,
 				94D3E6382098B2E600FB2894 /* NSManagedObject+FirstLetter.swift */,
 				94D3E6392098B2E600FB2894 /* PretixModel+Codable.swift */,
 			);
@@ -295,6 +298,7 @@
 				94D3E64A2098B30500FB2894 /* SyncManager.swift in Sources */,
 				94D3E6472098B30500FB2894 /* TabBarController.swift in Sources */,
 				94D3E6492098B30500FB2894 /* NetworkManager.swift in Sources */,
+				946DC5762162477300289796 /* EventListTableViewController.swift in Sources */,
 				9459E535212B1338009211FF /* Item+CoreDataClass.swift in Sources */,
 				940A838B2100E95B00EA3873 /* ListTableViewController.swift in Sources */,
 				94D3E6342098B2DA00FB2894 /* DetailTableViewController.swift in Sources */,
@@ -305,11 +309,11 @@
 				94D3E6512098B86400FB2894 /* LabelTableViewCell.swift in Sources */,
 				940A83882100B86E00EA3873 /* Order+CoreDataClass.swift in Sources */,
 				94D3E63A2098B2E600FB2894 /* NSManagedObject+FirstLetter.swift in Sources */,
-				940A83872100B86E00EA3873 /* Voucher+CoreDataProperties.swift in Sources */,
 				94B168A220C97C67002C9C2E /* BLEManager.swift in Sources */,
 				94D3E6482098B30500FB2894 /* KeychainService.swift in Sources */,
+				946DC5742162310600289796 /* Event+CoreDataProperties.swift in Sources */,
 				94D3E61A2098B04B00FB2894 /* AppDelegate.swift in Sources */,
-				940A83862100B86E00EA3873 /* Voucher+CoreDataClass.swift in Sources */,
+				946DC5732162310600289796 /* Event+CoreDataClass.swift in Sources */,
 				94D3E6402098B2EF00FB2894 /* TextFieldTableViewCell.swift in Sources */,
 				94D3E6412098B2EF00FB2894 /* ButtonTableViewCell.swift in Sources */,
 				940A83932101B39300EA3873 /* PrintTableViewController.swift in Sources */,

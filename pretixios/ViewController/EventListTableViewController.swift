@@ -1,28 +1,26 @@
 //
-//  CheckinListTabeViewController.swift
+//  EventListTableViewController.swift
 //  pretixios
 //
-//  Created by Marc Delling on 10.09.17.
-//  Copyright © 2017 Silpion IT-Solutions GmbH. All rights reserved.
+//  Created by Marc Delling on 01.10.18.
+//  Copyright © 2018 Silpion IT-Solutions GmbH. All rights reserved.
 //
 
 import UIKit
 import CoreData
 
-class CheckinListTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+class EventListTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
     
-    private var _fetchedResultsController: NSFetchedResultsController<Checkinlist>?
-    private var selectedList : Int32?
+    private var _fetchedResultsController: NSFetchedResultsController<Event>?
+    private var selectedEvent : Event?
     
-    var selectedEventSlug : String?
-    
-    var fetchedResultsController: NSFetchedResultsController<Checkinlist> {
+    var fetchedResultsController: NSFetchedResultsController<Event> {
         if let fetchedResultsController = _fetchedResultsController {
             return fetchedResultsController
         } else {
-            let fetchRequest: NSFetchRequest<Checkinlist> = Checkinlist.fetchRequest()
+            let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
             
-            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
             
             let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                                       managedObjectContext: SyncManager.sharedInstance.viewContext,
@@ -44,7 +42,7 @@ class CheckinListTableViewController: UITableViewController, NSFetchedResultsCon
         refreshControl?.addTarget(self, action: #selector(refreshControlAction), for: UIControl.Event.valueChanged)
         
         self.definesPresentationContext = true;
-        self.title = NSLocalizedString("Check-in list", comment: "")
+        self.title = NSLocalizedString("Events", comment: "")
         
         self.fetchedResultsController.tryFetch()
     }
@@ -56,7 +54,7 @@ class CheckinListTableViewController: UITableViewController, NSFetchedResultsCon
             receiveSyncDoneNotification()
         }
         
-        selectedList = Int32(UserDefaults.standard.integer(forKey: "pretix_checkin_list"))
+        // selectedEvent = UserDefaults.standard.string(forKey: "pretix_selected_event") FIXME
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -76,7 +74,7 @@ class CheckinListTableViewController: UITableViewController, NSFetchedResultsCon
                                                name: NSNotification.Name(rawValue: "syncDone"),
                                                object: nil)
         
-        NetworkManager.sharedInstance.getPretixCheckinlist(for: selectedEventSlug!) // FIXME
+        NetworkManager.sharedInstance.getPretixEvents()
     }
     
     // MARK: - Notifications
@@ -98,19 +96,19 @@ class CheckinListTableViewController: UITableViewController, NSFetchedResultsCon
             self.tableView.reloadData()
         }
     }
-
+    
     // MARK: - Table View Delegates
     
     func configure(_ cell: UITableViewCell, at indexPath: IndexPath) {
-        let list = self.fetchedResultsController.object(at: indexPath)
-        cell.textLabel?.text = list.name
-        if list.id == selectedList {
+        let event = self.fetchedResultsController.object(at: indexPath)
+        cell.textLabel?.text = event.name
+        if event.name == selectedEvent?.name {
             cell.accessoryType = .checkmark
         } else {
             cell.accessoryType = .none
         }
     }
-
+    
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
         return self.fetchedResultsController.sectionIndexTitles
     }
@@ -145,12 +143,11 @@ class CheckinListTableViewController: UITableViewController, NSFetchedResultsCon
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let list = self.fetchedResultsController.object(at: indexPath)
-        selectedList = list.id
-        
-        UserDefaults.standard.set(list.id, forKey: "pretix_checkin_list")
-        UserDefaults.standard.set(selectedEventSlug, forKey: "pretix_event_slug")
-        UserDefaults.standard.synchronize()
+        let event = self.fetchedResultsController.object(at: indexPath)
+        selectedEvent = event
+        let checkinListTableViewController = CheckinListTableViewController()
+        checkinListTableViewController.selectedEventSlug = selectedEvent?.slug
+        self.navigationController?.pushViewController(checkinListTableViewController, animated: true)
     }
     
     // MARK: - FetchedResultsController Delegates

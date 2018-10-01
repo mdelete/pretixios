@@ -620,18 +620,18 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                                     UserDefaults.standard.set(false, forKey: "reset_preference")
                                     
                                     KeychainService.savePassword(token: response.api_token, key: "pretix_api_token")
-                                    
-                                    //FIXME 
-                                    //UserDefaults.standard.setValue(response., forKey: "pretix_api_base")
-                                    UserDefaults.standard.setValue(response.device_id, forKey: "")
-                                    UserDefaults.standard.setValue(response.name, forKey: "")
-                                    UserDefaults.standard.setValue(response.organizer, forKey: "")
-                                    UserDefaults.standard.setValue(response.unique_serial, forKey: "")
+                                    let baseUrl = config.url.appendingPathComponent("/api/v1/organizers/").appendingPathComponent(response.organizer)
+                                    UserDefaults.standard.set(baseUrl, forKey: "pretix_api_base_url")
+                                    UserDefaults.standard.set(response.device_id, forKey: "pretix_device_id")
+                                    UserDefaults.standard.set(response.name, forKey: "pretix_device_name")
+                                    UserDefaults.standard.set(response.organizer, forKey: "pretix_organizer")
+                                    UserDefaults.standard.set(response.unique_serial, forKey: "pretix_unique_serial")
                                     UserDefaults.standard.synchronize()
                                     
-                                    NetworkManager.sharedInstance.getPretixItems()
-                                    NetworkManager.sharedInstance.getPretixCheckinlist()
-                                    NetworkManager.sharedInstance.getPretixOrders()
+                                    NetworkManager.sharedInstance.getPretixEvents()
+                                    //NetworkManager.sharedInstance.getPretixItems()
+                                    //NetworkManager.sharedInstance.getPretixCheckinlist()
+                                    //NetworkManager.sharedInstance.getPretixOrders()
                                 } else {
                                     self.infoView.setConfigurationView(result: false)
                                 }

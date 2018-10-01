@@ -58,7 +58,7 @@ class TextFieldTableViewCell: UITableViewCell, UITextFieldDelegate {
     }
     
     fileprivate func setup() {
-        self.selectionStyle = UITableViewCell.SelectionStyle.none
+        self.selectionStyle = .none
         
         //label.font = UIFont(name: "HelveticaNeue", size: 17.0)
         label.font = .preferredFont(forTextStyle: .body)

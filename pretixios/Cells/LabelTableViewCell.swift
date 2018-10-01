@@ -24,7 +24,7 @@ class LabelTableViewCell: UITableViewCell {
     }
     
     fileprivate func setup() {
-        self.selectionStyle = UITableViewCell.SelectionStyle.default
+        self.selectionStyle = .default
         self.accessoryType = .disclosureIndicator
         
         //label.font = UIFont(name: "HelveticaNeue", size: 17.0)

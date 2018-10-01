@@ -27,7 +27,7 @@ class AttendeeTableViewCell : UITableViewCell {
     
     fileprivate func setup() {
         
-        self.selectionStyle = UITableViewCell.SelectionStyle.default
+        self.selectionStyle = .default
         
         sourceView.backgroundColor = UIColor.clear
         sourceView.translatesAutoresizingMaskIntoConstraints = false

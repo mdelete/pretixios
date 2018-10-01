@@ -23,6 +23,7 @@
 		946DC5732162310600289796 /* Event+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946DC5712162310600289796 /* Event+CoreDataClass.swift */; };
 		946DC5742162310600289796 /* Event+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946DC5722162310600289796 /* Event+CoreDataProperties.swift */; };
 		946DC5762162477300289796 /* EventListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946DC5752162477300289796 /* EventListTableViewController.swift */; };
+		946DC5782162987A00289796 /* AirPrintService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946DC5772162987A00289796 /* AirPrintService.swift */; };
 		94B168A220C97C67002C9C2E /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B168A120C97C67002C9C2E /* BLEManager.swift */; };
 		94D3E61A2098B04B00FB2894 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3E6192098B04B00FB2894 /* AppDelegate.swift */; };
 		94D3E6232098B04D00FB2894 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94D3E6222098B04D00FB2894 /* Assets.xcassets */; };
@@ -66,6 +67,7 @@
 		946DC5712162310600289796 /* Event+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+CoreDataClass.swift"; sourceTree = "<group>"; };
 		946DC5722162310600289796 /* Event+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		946DC5752162477300289796 /* EventListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListTableViewController.swift; sourceTree = "<group>"; };
+		946DC5772162987A00289796 /* AirPrintService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPrintService.swift; sourceTree = "<group>"; };
 		94B168A120C97C67002C9C2E /* BLEManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
 		94B168A420CA17C5002C9C2E /* pretixios.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = pretixios.entitlements; sourceTree = "<group>"; };
 		94D3E6162098B04B00FB2894 /* pretixios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pretixios.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,13 +111,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		94B168A320C98C62002C9C2E /* Ble */ = {
+		94B168A320C98C62002C9C2E /* Badgeprint */ = {
 			isa = PBXGroup;
 			children = (
 				94B168A120C97C67002C9C2E /* BLEManager.swift */,
 				94D9AC2B2134B0D80022864B /* SLCSPrintFormatter.swift */,
+				946DC5772162987A00289796 /* AirPrintService.swift */,
 			);
-			path = Ble;
+			path = Badgeprint;
 			sourceTree = "<group>";
 		};
 		94D3E60D2098B04B00FB2894 = {
@@ -146,7 +149,7 @@
 				94D3E62F2098B0E700FB2894 /* Cells */,
 				94D3E62E2098B0D600FB2894 /* Model */,
 				94D3E62D2098B0B100FB2894 /* ViewController */,
-				94B168A320C98C62002C9C2E /* Ble */,
+				94B168A320C98C62002C9C2E /* Badgeprint */,
 				94D3E6222098B04D00FB2894 /* Assets.xcassets */,
 				94B168A420CA17C5002C9C2E /* pretixios.entitlements */,
 				940C4E0A209E592D00FF723F /* LaunchScreen.storyboard */,
@@ -306,6 +309,7 @@
 				94EDC145209A67DC005A30EF /* StatusTableViewController.swift in Sources */,
 				940A83852100B86E00EA3873 /* Syncstate+CoreDataProperties.swift in Sources */,
 				940A83892100B86E00EA3873 /* Order+CoreDataProperties.swift in Sources */,
+				946DC5782162987A00289796 /* AirPrintService.swift in Sources */,
 				94D3E6512098B86400FB2894 /* LabelTableViewCell.swift in Sources */,
 				940A83882100B86E00EA3873 /* Order+CoreDataClass.swift in Sources */,
 				94D3E63A2098B2E600FB2894 /* NSManagedObject+FirstLetter.swift in Sources */,

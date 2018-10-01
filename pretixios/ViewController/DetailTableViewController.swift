@@ -256,8 +256,16 @@ class DetailTableViewController: UITableViewController, ButtonCellDelegate, UISp
                     
                     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                    self.present(alert, animated: true)
                     
+                    if let name = order.attendee_name, let company = order.company {
+                        let printAction = UIAlertAction(title: NSLocalizedString("Badge drucken", comment: ""), style: .default, handler: { _ in
+                            let airPrintService = AirPrintService()
+                            airPrintService.printBadgeWithConfiguredPrinter(firstLine: name, secondLine: company, thirdLine: order.comment)
+                        })
+                        alert.addAction(printAction)
+                    }
+                    
+                    self.present(alert, animated: true)
                     self.tableView.reloadData()
                 }
             }

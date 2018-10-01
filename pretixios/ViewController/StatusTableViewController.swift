@@ -11,7 +11,7 @@ import UIKit
 class StatusTableViewController: UITableViewController {
 
     public var order: Order?
-    private let states : [PretixOrderResponse.Result.Status] = [.n,.p,.e,.c,.r] // FIXME: allState swift 4.2
+    private let states : [PretixOrderResponse.Result.Status] = [.n,.p,.e,.c,.r]
     
     override func viewDidLoad() {
         super.viewDidLoad()

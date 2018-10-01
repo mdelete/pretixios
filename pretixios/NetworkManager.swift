@@ -287,12 +287,12 @@ class NetworkManager : NSObject, URLSessionDelegate {
                             do {
                                 let results = try context.fetch(fetchRequest)
                                 if results.count == 1 {
-                                    results.first?.name = name // FIXME
+                                    results.first?.name = name
                                     print("Remote update event \(name)")
                                 } else if (results.count == 0) {
                                     let event = Event(context: context)
                                     event.slug = result.slug
-                                    event.name = name // FIXME
+                                    event.name = name
                                     print("Remote new event \(name)")
                                 } else {
                                     print("HORROR! \(results.count)")

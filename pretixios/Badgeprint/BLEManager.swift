@@ -26,6 +26,7 @@ class BLEManager: NSObject {
     let BaudCharacteristicUUID = CBUUID(string: "6E400004-B5A3-F393-E0A9-E50E24DCCA9F")
     let HWFCCharacteristicUUID = CBUUID(string: "6E400005-B5A3-F393-E0A9-E50E24DCCA9F")
     let NameCharacteristicUUID = CBUUID(string: "6E400006-B5A3-F393-E0A9-E50E24DCCA9F")
+    let DirectionCharacteristicUUID = CBUUID(string: "6E400007-B5A3-F393-E0A9-E50E24DCCA9F")
     let RSSI_range = -40..<(-15)  // optimal -22dB -> reality -48dB
     let notifyMTU = 20  // Extended Data Length 244 for iPhone 7, 7 Plus
     
@@ -69,6 +70,7 @@ class BLEManager: NSObject {
     fileprivate var sendQueue = [Data]()
     fileprivate var baud = UInt32(115200)
     fileprivate var hwfc = false
+    fileprivate var shouldReconnect = false
     
     var baudRate: UInt32 {
         get { return baud }
@@ -109,6 +111,14 @@ class BLEManager: NSObject {
         }
     }
     
+    func applyKeepAliveTimer() {
+        Timer.scheduledTimer(withTimeInterval: TimeInterval(60.0), repeats: false) { (_) in
+            if let characteristic = self.hwfcCharacteristic {
+                self.connectedPeripheral?.readValue(for: characteristic)
+            }
+        }
+    }
+    
     func applyStopScanTimer() {
         Timer.scheduledTimer(withTimeInterval: TimeInterval(9.0), repeats: false) { (_) in
             if self.centralManager.isScanning {
@@ -136,6 +146,7 @@ class BLEManager: NSObject {
     
     func cleanup() {
         
+        shouldReconnect = false
         killStopScanTimer()
         uartTxCharacteristic = nil
         sendQueue.removeAll()
@@ -190,6 +201,8 @@ extension BLEManager: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        
+        shouldReconnect = true
         connectedPeripheral = peripheral
         centralManager.stopScan()
         delegate?.didStopScanning(self)
@@ -204,7 +217,9 @@ extension BLEManager: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        if (peripheral == connectedPeripheral) {
+        if shouldReconnect {
+            centralManager.connect(peripheral, options: [:])
+        } else {
             cleanup()
             delegate?.didDisconnect(self)
         }

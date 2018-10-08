@@ -9,6 +9,12 @@
 import Foundation
 import UIKit
 
+public enum PrinterType : Int {
+    case None
+    case AirPrint
+    case BLE
+}
+
 public extension String {
     
     func parsePSQLFractionedDate() -> Date? {

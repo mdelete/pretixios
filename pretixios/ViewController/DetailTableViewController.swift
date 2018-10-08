@@ -257,10 +257,20 @@ class DetailTableViewController: UITableViewController, ButtonCellDelegate, UISp
                     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                     
-                    if let name = order.attendee_name, let company = order.company {
+                    let printer = UserDefaults.standard.integer(forKey: "printer_type")
+                    
+                    if let name = order.attendee_name, let company = order.company, printer > 0 {
                         let printAction = UIAlertAction(title: NSLocalizedString("Badge drucken", comment: ""), style: .default, handler: { _ in
-                            let airPrintService = AirPrintService()
-                            airPrintService.printBadgeWithConfiguredPrinter(firstLine: name, secondLine: company, thirdLine: order.comment)
+                            switch printer {
+                            case PrinterType.AirPrint.rawValue:
+                                let airPrintService = AirPrintService()
+                                airPrintService.printBadgeWithConfiguredPrinter(firstLine: name, secondLine: company, thirdLine: order.comment)
+                            case PrinterType.BLE.rawValue:
+                                let data = SLCSPrintFormatter.buildUartPrinterData(lines: [name, company], auxiliary: order.comment ?? "")
+                                BLEManager.sharedInstance.write(data: data)
+                            default:
+                                ()
+                            }
                         })
                         alert.addAction(printAction)
                     }

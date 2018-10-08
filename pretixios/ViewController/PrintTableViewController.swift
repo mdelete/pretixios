@@ -12,7 +12,7 @@ import CoreBluetooth
 
 class PrintTableViewController: UITableViewController, BLEManagerDelegate {
     
-    var selectedSetting : Int = 1
+    var selectedSetting : Int = 0
     var selectedPeripheral : CBPeripheral?
     var discoveredPeripherals = [CBPeripheral]()
     
@@ -28,13 +28,13 @@ class PrintTableViewController: UITableViewController, BLEManagerDelegate {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Testbadge", comment: ""),
                                                                  style: UIBarButtonItem.Style.done,
                                                                  target: self,
-                                                                 action: #selector(printBadgeAirPrint))
+                                                                 action: #selector(printTestBadge))
         BLEManager.sharedInstance.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // read printer setting
+        selectedSetting = UserDefaults.standard.integer(forKey: "printer_type")
     }
     
     // MARK: - Table view data source
@@ -53,7 +53,7 @@ class PrintTableViewController: UITableViewController, BLEManagerDelegate {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 4
+            return 3
         } else {
             return discoveredPeripherals.count
         }
@@ -70,11 +70,8 @@ class PrintTableViewController: UITableViewController, BLEManagerDelegate {
                 cell.textLabel?.text = NSLocalizedString("AirPrint", comment: "AirPrint is a brand name")
                 cell.textLabel?.textColor = UIColor.black
             case 2:
-                cell.textLabel?.text = NSLocalizedString("MQTT", comment: "")
-                cell.textLabel?.textColor = UIColor.gray
-            case 3:
                 cell.textLabel?.text = NSLocalizedString("Bluetooth Serial", comment: "")
-                cell.textLabel?.textColor = UIColor.gray
+                cell.textLabel?.textColor = UIColor.black
             default: ()
             }
             if selectedSetting == indexPath.row {
@@ -102,7 +99,10 @@ class PrintTableViewController: UITableViewController, BLEManagerDelegate {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             selectedSetting = indexPath.row
-            if indexPath.row == 3 {
+            UserDefaults.standard.set(selectedSetting, forKey: "printer_type")
+            UserDefaults.standard.synchronize()
+            
+            if indexPath.row == 2 {
                 BLEManager.sharedInstance.scan()
             }
         } else {
@@ -185,37 +185,39 @@ class PrintTableViewController: UITableViewController, BLEManagerDelegate {
         return (maxName, maxCompany)
     }
     
-    // MARK: - BLE Print
+    // MARK: - Print action
     
-    @objc func printBadgeBLE() {
+    @objc func printTestBadge() {
+        
         let (maxName, maxCompany) = maxBadge()
-        let data = SLCSPrintFormatter.buildUartPrinterData(lines: [maxName, maxCompany], auxiliary: "TESTBADGE")
-        BLEManager.sharedInstance.write(data: data)
-    }
-    
-    // MARK: - AirPrint
-    
-    @objc func printBadgeAirPrint() {
-        let (maxName, maxCompany) = maxBadge()
-        let printerPicker = UIPrinterPickerController(initiallySelectedPrinter: nil)
-        if UIUserInterfaceIdiom.pad == UIDevice.current.userInterfaceIdiom {
-            printerPicker.present(from: self.navigationItem.rightBarButtonItem!, animated: true) { (picker, userDidSelect, error) in
-                if userDidSelect, let selectedPrinter = picker.selectedPrinter {
-                    self.airPrintService.printTestBadgeWithPrinter(selectedPrinter, firstLine: maxName, secondLine: maxCompany)
-                    print("printer url: \(selectedPrinter.url)")
-                    UserDefaults.standard.set(selectedPrinter.url, forKey: "last_used_printer")
-                    UserDefaults.standard.synchronize()
+        
+        switch selectedSetting {
+        case 1:
+            let printerPicker = UIPrinterPickerController(initiallySelectedPrinter: nil)
+            if UIUserInterfaceIdiom.pad == UIDevice.current.userInterfaceIdiom {
+                printerPicker.present(from: self.navigationItem.rightBarButtonItem!, animated: true) { (picker, userDidSelect, error) in
+                    if userDidSelect, let selectedPrinter = picker.selectedPrinter {
+                        self.airPrintService.printTestBadgeWithPrinter(selectedPrinter, firstLine: maxName, secondLine: maxCompany)
+                        print("printer url: \(selectedPrinter.url)")
+                        UserDefaults.standard.set(selectedPrinter.url, forKey: "last_used_printer")
+                        UserDefaults.standard.synchronize()
+                    }
+                }
+            } else {
+                printerPicker.present(animated: true) { (picker, userDidSelect, error) in
+                    if userDidSelect, let selectedPrinter = picker.selectedPrinter {
+                        self.airPrintService.printTestBadgeWithPrinter(selectedPrinter, firstLine: maxName, secondLine: maxCompany)
+                        print("printer url: \(selectedPrinter.url)")
+                        UserDefaults.standard.set(selectedPrinter.url, forKey: "last_used_printer")
+                        UserDefaults.standard.synchronize()
+                    }
                 }
             }
-        } else {
-            printerPicker.present(animated: true) { (picker, userDidSelect, error) in
-                if userDidSelect, let selectedPrinter = picker.selectedPrinter {
-                    self.airPrintService.printTestBadgeWithPrinter(selectedPrinter, firstLine: maxName, secondLine: maxCompany)
-                    print("printer url: \(selectedPrinter.url)")
-                    UserDefaults.standard.set(selectedPrinter.url, forKey: "last_used_printer")
-                    UserDefaults.standard.synchronize()
-                }
-            }
+        case 2:
+            let data = SLCSPrintFormatter.buildUartPrinterData(lines: [maxName, maxCompany], auxiliary: "TESTBADGE")
+            BLEManager.sharedInstance.write(data: data)
+        default:
+            ()
         }
     }
 }

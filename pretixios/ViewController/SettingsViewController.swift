@@ -12,6 +12,7 @@ import LocalAuthentication
 class SettingsViewController: UITableViewController, ButtonCellDelegate {
 
     private var selectedEvent : String?
+    private var selectedPrinter : String?
     
     convenience init() {
         self.init(style: .grouped)
@@ -31,6 +32,17 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
         if let event = UserDefaults.standard.string(forKey: "pretix_event_slug") {
             selectedEvent = "\(event) - \(UserDefaults.standard.integer(forKey: "pretix_checkin_list"))"
         }
+        
+        switch UserDefaults.standard.integer(forKey: "printer_type") {
+        case PrinterType.AirPrint.rawValue:
+            selectedPrinter = NSLocalizedString("AirPrint", comment: "AirPrint is a brand name")
+        case PrinterType.BLE.rawValue:
+            selectedPrinter = NSLocalizedString("BLE", comment: "Bluetooth Low Energy")
+        default:
+            selectedPrinter = NSLocalizedString("None", comment: "")
+        }
+        
+        self.tableView.reloadData()
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -56,7 +68,7 @@ class SettingsViewController: UITableViewController, ButtonCellDelegate {
         case(0, 0):
             let cell = tableView.dequeueReusableCell(withIdentifier: "labelCell", for: indexPath) as! LabelTableViewCell
             cell.label.text = NSLocalizedString("Badge print", comment: "")
-            cell.valueLabel.text = NSLocalizedString("AirPrint", comment: "AirPrint is a brand name")
+            cell.valueLabel.text = selectedPrinter
             return cell
         case(0, 1):
             let cell = tableView.dequeueReusableCell(withIdentifier: "labelCell", for: indexPath) as! LabelTableViewCell

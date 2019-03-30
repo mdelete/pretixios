@@ -51,7 +51,7 @@ public extension Data {
     func sha256() -> String {
         var hash = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
         self.withUnsafeBytes {
-            _ = CC_SHA256($0, CC_LONG(self.count), &hash)
+            _ = CC_SHA256($0.baseAddress, CC_LONG(self.count), &hash)
         }
         let hexBytes = hash.map { String(format: "%02hhx", $0) }
         return hexBytes.joined()
@@ -60,9 +60,9 @@ public extension Data {
     func sha256Base64() -> String {
         var hash = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
         self.withUnsafeBytes {
-            _ = CC_SHA256($0, CC_LONG(self.count), &hash)
+            _ = CC_SHA256($0.baseAddress, CC_LONG(self.count), &hash)
         }
-        return Data(bytes: hash).base64EncodedString(options: NSData.Base64EncodingOptions.init(rawValue: 0))
+        return Data(hash).base64EncodedString(options: NSData.Base64EncodingOptions.init(rawValue: 0))
     }
     
 }
@@ -109,7 +109,7 @@ public extension Date {
 
 public extension UIColor {
     
-    public convenience init(hexString: String) {
+    convenience init(hexString: String) {
         let hexString = hexString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         let scanner = Scanner(string: hexString)
         

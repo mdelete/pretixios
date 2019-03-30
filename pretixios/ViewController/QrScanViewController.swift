@@ -532,6 +532,8 @@ class QrScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             showAlert(title: NSLocalizedString("No camera access", comment: ""),
                       message: NSLocalizedString("Camera access has been denied in restrictions.", comment: ""))
             break
+        @unknown default:
+            ()
         }
 #endif
     }

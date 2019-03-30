@@ -134,7 +134,7 @@ class PrintTableViewController: UITableViewController, BLEManagerDelegate {
     }
     
     func didDiscover(_ manager: BLEManager, peripheral: CBPeripheral) {
-        if let _ = discoveredPeripherals.index(of: peripheral) {
+        if let _ = discoveredPeripherals.firstIndex(of: peripheral) {
             // nix
         } else {
             discoveredPeripherals.append(peripheral)

@@ -25,7 +25,7 @@ class CICode39 : CIFilter
         if var data = inputMessage {
             var checksum = 0
             data.forEach { (byte) in
-                if let i = cp.index(of: byte) {
+                if let i = cp.firstIndex(of: byte) {
                     checksum += i
                 } else {
                     checksum = -1

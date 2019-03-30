@@ -164,6 +164,8 @@ class EventListTableViewController: UITableViewController, NSFetchedResultsContr
             break
         case .update:
             break
+        @unknown default:
+            ()
         }
     }
     
@@ -185,6 +187,8 @@ class EventListTableViewController: UITableViewController, NSFetchedResultsContr
             if let indexPath = indexPath, let newIndexPath = newIndexPath {
                 tableView.moveRow(at: indexPath, to: newIndexPath)
             }
+        @unknown default:
+            ()
         }
     }
     

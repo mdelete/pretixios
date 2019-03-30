@@ -326,6 +326,8 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
             break
         case .update:
             break
+        @unknown default:
+            ()
         }
     }
     
@@ -347,6 +349,8 @@ class ListTableViewController: UITableViewController, UISearchBarDelegate, UISea
             if let indexPath = indexPath, let newIndexPath = newIndexPath {
                 tableView.moveRow(at: indexPath, to: newIndexPath)
             }
+        @unknown default:
+            ()
         }
     }
     

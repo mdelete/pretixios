@@ -329,7 +329,7 @@ extension Bool {
         }
     }
     var data: Data {
-        return Data(bytes: [self ? 255 : 0])
+        return Data([self ? 255 : 0])
     }
 }
 

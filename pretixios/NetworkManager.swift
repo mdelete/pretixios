@@ -88,9 +88,9 @@ class NetworkManager : NSObject, URLSessionDelegate {
         if let data = publicKeyRefToData(publicKeyRef: publicKeyRef) {
             var hash = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
             data.withUnsafeBytes {
-                _ = CC_SHA256($0, CC_LONG(data.count), &hash)
+                _ = CC_SHA256($0.baseAddress, CC_LONG(data.count), &hash)
             }
-            return Data(bytes: hash).base64EncodedString(options: NSData.Base64EncodingOptions.init(rawValue: 0))
+            return Data(hash).base64EncodedString(options: NSData.Base64EncodingOptions.init(rawValue: 0))
         }
         
         return ""
@@ -107,13 +107,13 @@ class NetworkManager : NSObject, URLSessionDelegate {
             kSecClass as String : kSecClassKey,
             kSecAttrApplicationTag as String : keychainTag,
             kSecValueRef as String : publicKeyRef,
-            kSecReturnData as String : kCFBooleanTrue
+            kSecReturnData as String : kCFBooleanTrue!
         ]
         
         let delKeyParams : NSMutableDictionary = [
             kSecClass as String : kSecClassKey,
             kSecAttrApplicationTag as String : keychainTag,
-            kSecReturnData as String : kCFBooleanTrue
+            kSecReturnData as String : kCFBooleanTrue!
         ]
         
         putResult = SecItemAdd(putKeyParams as CFDictionary, &publicKeyData)

@@ -242,7 +242,7 @@
 				TargetAttributes = {
 					94D3E6152098B04B00FB2894 = {
 						CreatedOnToolsVersion = 9.3;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -264,6 +264,7 @@
 			knownRegions = (
 				en,
 				de,
+				Base,
 			);
 			mainGroup = 94D3E60D2098B04B00FB2894;
 			productRefGroup = 94D3E6172098B04B00FB2894 /* Products */;
@@ -490,7 +491,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = de.silpion.pretixios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -509,7 +510,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = de.silpion.pretixios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

@@ -30,7 +30,7 @@ class StatusTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        if let status = order?.status, let index = states.index(of: status), index == indexPath.row {
+        if let status = order?.status, let index = states.firstIndex(of: status), index == indexPath.row {
             cell.accessoryType = .checkmark
         } else {
             cell.accessoryType = .none
